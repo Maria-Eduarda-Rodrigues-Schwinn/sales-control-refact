@@ -11,23 +11,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
-/**
- * Classe para a tela de edição de produto.
- *
- * <p>Esta classe estende JFrame e fornece a interface gráfica para a edição de produtos. Permite
- * editar, excluir, buscar produtos por nome e carregar todos os produtos. Também permite navegar
- * para outras telas como registro de venda, registro de produto, e relatório de vendas.
- */
 public class EditProduct extends javax.swing.JFrame {
 
-  /** Usuário atual que está utilizando a tela de edição de produto. */
   private final User currentUser;
 
-  /**
-   * Construtor para inicializar a tela de edição de produto com o usuário atual.
-   *
-   * @param user o usuário atual.
-   */
   public EditProduct(User user) {
     this.currentUser = user;
     initComponents();
@@ -303,63 +290,31 @@ public class EditProduct extends javax.swing.JFrame {
     setLocationRelativeTo(null);
   } // </editor-fold>//GEN-END:initComponents
 
-  /**
-   * Ação do item de menu para registrar uma venda.
-   *
-   * <p>Abre a tela de registro de venda.
-   *
-   * @param evt o evento de ação.
-   */
-  private void itRegisterSaleActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_itRegisterSaleActionPerformed
+  private void itRegisterSaleActionPerformed(java.awt.event.ActionEvent evt) {
     java.awt.EventQueue.invokeLater(
         () -> {
           new RegisterSale(currentUser).setVisible(true);
         });
     this.setVisible(false);
-  } // GEN-LAST:event_itRegisterSaleActionPerformed
+  }
 
-  /**
-   * Ação do item de menu para registrar um produto.
-   *
-   * <p>Abre a tela de registro de produto.
-   *
-   * @param evt o evento de ação.
-   */
-  private void itRegisterProductActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_itRegisterProductActionPerformed
+  private void itRegisterProductActionPerformed(java.awt.event.ActionEvent evt) {
     java.awt.EventQueue.invokeLater(
         () -> {
           new RegisterProduct(currentUser).setVisible(true);
         });
     this.setVisible(false);
-  } // GEN-LAST:event_itRegisterProductActionPerformed
+  }
 
-  /**
-   * Ação do item de menu para visualizar o relatório de vendas.
-   *
-   * <p>Abre a tela de relatório de vendas.
-   *
-   * @param evt o evento de ação.
-   */
-  private void itSaleReportsActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_itSaleReportsActionPerformed
+  private void itSaleReportsActionPerformed(java.awt.event.ActionEvent evt) {
     java.awt.EventQueue.invokeLater(
         () -> {
           new SalesReport(currentUser).setVisible(true);
         });
     this.setVisible(false);
-  } // GEN-LAST:event_itSaleReportsActionPerformed
+  }
 
-  /**
-   * Ação do item de menu para sair.
-   *
-   * <p>Abre uma caixa de diálogo de confirmação de logout.
-   *
-   * @param evt o evento de ação.
-   */
-  private void itLeaveActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_itLeaveActionPerformed
+  private void itLeaveActionPerformed(java.awt.event.ActionEvent evt) {
     UIManager.put("OptionPane.yesButtonText", "Sim");
     UIManager.put("OptionPane.noButtonText", "Não");
 
@@ -372,18 +327,9 @@ public class EditProduct extends javax.swing.JFrame {
           });
       this.setVisible(false);
     }
-  } // GEN-LAST:event_itLeaveActionPerformed
+  }
 
-  /**
-   * Ação do botão para editar o produto selecionado.
-   *
-   * <p>Permite editar o preço unitário e a quantidade do produto selecionado. Atualiza os valores
-   * no banco de dados e na tabela de produtos.
-   *
-   * @param evt o evento de ação.
-   */
-  private void btnEditSelectedProductActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnEditSelectedProductActionPerformed
+  private void btnEditSelectedProductActionPerformed(java.awt.event.ActionEvent evt) {
     int selectedRow = tblProducts.getSelectedRow();
     if (selectedRow == -1) {
       JOptionPane.showMessageDialog(this, "Por favor, selecione um produto para editar.");
@@ -449,17 +395,9 @@ public class EditProduct extends javax.swing.JFrame {
             this, "Produto não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
       }
     }
-  } // GEN-LAST:event_btnEditSelectedProductActionPerformed
+  }
 
-  /**
-   * Ação do botão para excluir o produto selecionado.
-   *
-   * <p>Exclui o produto selecionado do banco de dados e atualiza a tabela de produtos.
-   *
-   * @param evt o evento de ação.
-   */
-  private void btnDropSelectedProductActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDropSelectedProductActionPerformed
+  private void btnDropSelectedProductActionPerformed(java.awt.event.ActionEvent evt) {
     int selectedRow = tblProducts.getSelectedRow();
     if (selectedRow == -1) {
       JOptionPane.showMessageDialog(this, "Por favor, selecione um produto para excluir.");
@@ -488,17 +426,9 @@ public class EditProduct extends javax.swing.JFrame {
             this, "Erro ao excluir o produto.", "Erro", JOptionPane.ERROR_MESSAGE);
       }
     }
-  } // GEN-LAST:event_btnDropSelectedProductActionPerformed
+  }
 
-  /**
-   * Ação do botão para buscar produtos pelo nome.
-   *
-   * <p>Busca produtos no banco de dados com base no nome fornecido e atualiza a tabela de produtos.
-   *
-   * @param evt o evento de ação.
-   */
-  private void btnSearchByProductNameActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnSearchByProductNameActionPerformed
+  private void btnSearchByProductNameActionPerformed(java.awt.event.ActionEvent evt) {
     String searchName = JOptionPane.showInputDialog(this, "Digite o nome do produto para buscar:");
     if (searchName != null && !searchName.trim().isEmpty()) {
       ProductDao productDao = new ProductDao();
@@ -508,30 +438,13 @@ public class EditProduct extends javax.swing.JFrame {
       JOptionPane.showMessageDialog(
           this, "Nome do produto não pode estar vazio.", "Erro", JOptionPane.ERROR_MESSAGE);
     }
-  } // GEN-LAST:event_btnSearchByProductNameActionPerformed
+  }
 
-  /**
-   * Ação do botão para carregar todos os produtos.
-   *
-   * <p>Carrega todos os produtos do banco de dados e atualiza a tabela de produtos.
-   *
-   * @param evt o evento de ação.
-   */
-  private void btnLoadAllActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnLoadAllActionPerformed
+  private void btnLoadAllActionPerformed(java.awt.event.ActionEvent evt) {
     loadProductTable();
-  } // GEN-LAST:event_btnLoadAllActionPerformed
+  }
 
-  /**
-   * Método principal para inicializar a aplicação.
-   *
-   * @param args os argumentos da linha de comando.
-   */
   public static void main(String args[]) {
-    // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-     * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-     */
     try {
       for (javax.swing.UIManager.LookAndFeelInfo info :
           javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -547,8 +460,6 @@ public class EditProduct extends javax.swing.JFrame {
       java.util.logging.Logger.getLogger(EditProduct.class.getName())
           .log(java.util.logging.Level.SEVERE, null, ex);
     }
-    // </editor-fold>
-    // </editor-fold>
 
     java.awt.EventQueue.invokeLater(
         () -> {
@@ -574,11 +485,6 @@ public class EditProduct extends javax.swing.JFrame {
 
   // End of variables declaration//GEN-END:variables
 
-  /**
-   * Atualiza a tabela de produtos.
-   *
-   * <p>Carrega os dados dos produtos do banco de dados e os exibe na tabela.
-   */
   public void updateProductTable() {
     DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
     model.setRowCount(0);
@@ -605,11 +511,6 @@ public class EditProduct extends javax.swing.JFrame {
     updateProductTable();
   }
 
-  /**
-   * Define as permissões de acesso aos itens do menu com base no tipo de usuário.
-   *
-   * <p>Este método desabilita certos itens do menu para usuários do tipo empregado.
-   */
   private void setPermissions() {
     if (currentUser.getUserType() == UserType.EMPLOYEE) {
       itRegisterProduct.setEnabled(false);
@@ -617,11 +518,6 @@ public class EditProduct extends javax.swing.JFrame {
     }
   }
 
-  /**
-   * Carrega a tabela de produtos.
-   *
-   * <p>Este método obtém todos os produtos do banco de dados e atualiza a tabela de produtos.
-   */
   private void loadProductTable() {
     ProductDao productDao = new ProductDao();
     List<Product> productList = productDao.getAllProducts();

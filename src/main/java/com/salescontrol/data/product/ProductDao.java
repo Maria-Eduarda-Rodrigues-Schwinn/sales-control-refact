@@ -5,28 +5,12 @@ import com.salescontrol.domain.Product;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
-/**
- * DAO para gerenciar operações de banco de dados relacionadas a produtos.
- *
- * <p>Esta classe fornece métodos para realizar operações CRUD (Create, Read, Update, Delete) em
- * objetos de produto no banco de dados. Utiliza o EntityManager para gerenciar as transações.
- */
 public class ProductDao {
 
-  /**
-   * Obtém uma instância de EntityManager.
-   *
-   * @return uma instância de EntityManager.
-   */
   private EntityManager getEntityManager() {
     return JPAUtil.getEntityManager();
   }
 
-  /**
-   * Salva um produto no banco de dados.
-   *
-   * @param product o produto a ser salvo.
-   */
   public void save(Product product) {
     EntityManager em = getEntityManager();
     try {
@@ -41,11 +25,6 @@ public class ProductDao {
     }
   }
 
-  /**
-   * Obtém todos os produtos do banco de dados.
-   *
-   * @return uma lista de todos os produtos.
-   */
   public List<Product> getAllProducts() {
     EntityManager em = getEntityManager();
     try {
@@ -55,11 +34,6 @@ public class ProductDao {
     }
   }
 
-  /**
-   * Atualiza um produto no banco de dados.
-   *
-   * @param product o produto a ser atualizado.
-   */
   public void update(Product product) {
     EntityManager em = getEntityManager();
     try {
@@ -74,12 +48,6 @@ public class ProductDao {
     }
   }
 
-  /**
-   * Exclui um produto pelo ID.
-   *
-   * @param id o ID do produto a ser excluído.
-   * @return true se o produto foi excluído com sucesso, false caso contrário.
-   */
   public boolean delete(int id) {
     EntityManager em = getEntityManager();
     try {
@@ -101,12 +69,6 @@ public class ProductDao {
     }
   }
 
-  /**
-   * Pesquisa produtos pelo nome usando LIKE.
-   *
-   * @param name o nome a ser pesquisado.
-   * @return uma lista de produtos que correspondem ao nome.
-   */
   public List<Product> searchProductsByName(String name) {
     EntityManager em = getEntityManager();
     try {
@@ -118,12 +80,6 @@ public class ProductDao {
     }
   }
 
-  /**
-   * Obtém um produto pelo ID.
-   *
-   * @param id o ID do produto.
-   * @return o produto correspondente ao ID, ou null se o produto não for encontrado.
-   */
   public Product getProductById(int id) {
     EntityManager em = getEntityManager();
     try {
@@ -133,12 +89,6 @@ public class ProductDao {
     }
   }
 
-  /**
-   * Atualiza a quantidade de um produto no banco de dados.
-   *
-   * @param productId o ID do produto.
-   * @param quantity a nova quantidade do produto.
-   */
   public void updateProductQuantity(int productId, int quantity) {
     EntityManager em = getEntityManager();
     try {

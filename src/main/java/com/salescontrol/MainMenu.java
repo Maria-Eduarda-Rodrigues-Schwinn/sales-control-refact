@@ -3,23 +3,10 @@ package com.salescontrol;
 import com.salescontrol.domain.User;
 import com.salescontrol.enuns.UserType;
 
-/**
- * Classe para o menu principal da aplicação.
- *
- * <p>Esta classe estende JFrame e fornece a interface gráfica do menu principal da aplicação.
- * Permite navegar para telas de registro de venda, registro de produto, edição de produto,
- * relatório de vendas e logout.
- */
 public class MainMenu extends javax.swing.JFrame {
 
-  /** Usuário atual que está utilizando o menu principal. */
   private final User currentUser;
 
-  /**
-   * Construtor para inicializar o menu principal com o usuário atual.
-   *
-   * @param user o usuário atual.
-   */
   public MainMenu(User user) {
     this.currentUser = user;
     initComponents();
@@ -210,87 +197,42 @@ public class MainMenu extends javax.swing.JFrame {
     setLocationRelativeTo(null);
   } // </editor-fold>//GEN-END:initComponents
 
-  /**
-   * Ação do botão de registrar venda.
-   *
-   * <p>Abre a tela de registro de venda.
-   *
-   * @param evt o evento de clique do botão.
-   */
-  private void btnRegisterSaleActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnRegisterSaleActionPerformed
+  private void btnRegisterSaleActionPerformed(java.awt.event.ActionEvent evt) {
     RegisterSale saleRegistrationScreen = new RegisterSale(currentUser);
     saleRegistrationScreen.setVisible(true);
     this.setVisible(false);
-  } // GEN-LAST:event_btnRegisterSaleActionPerformed
+  }
 
-  /**
-   * Ação do botão de registrar produto.
-   *
-   * <p>Abre a tela de registro de produto.
-   *
-   * @param evt o evento de clique do botão.
-   */
-  private void btnRegisterProductActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnRegisterProductActionPerformed
+  private void btnRegisterProductActionPerformed(java.awt.event.ActionEvent evt) {
     java.awt.EventQueue.invokeLater(
         () -> {
           new RegisterProduct(currentUser).setVisible(true);
         });
     this.setVisible(false);
-  } // GEN-LAST:event_btnRegisterProductActionPerformed
+  }
 
-  /**
-   * Ação do botão de editar produto.
-   *
-   * <p>Abre a tela de edição de produto.
-   *
-   * @param evt o evento de clique do botão.
-   */
-  private void btnEditProductActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnEditProductActionPerformed
+  private void btnEditProductActionPerformed(java.awt.event.ActionEvent evt) {
     EditProduct editProductScreen = new EditProduct(currentUser);
     editProductScreen.setVisible(true);
     this.setVisible(false);
-  } // GEN-LAST:event_btnEditProductActionPerformed
+  }
 
-  /**
-   * Ação do botão de relatório de vendas.
-   *
-   * <p>Abre a tela de relatório de vendas.
-   *
-   * @param evt o evento de clique do botão.
-   */
-  private void btnSalesReportActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnSalesReportActionPerformed
+  private void btnSalesReportActionPerformed(java.awt.event.ActionEvent evt) {
     java.awt.EventQueue.invokeLater(
         () -> {
           new SalesReport(currentUser).setVisible(true);
         });
     this.setVisible(false);
-  } // GEN-LAST:event_btnSalesReportActionPerformed
+  }
 
-  /**
-   * Ação do botão de sair.
-   *
-   * <p>Abre a tela de login.
-   *
-   * @param evt o evento de clique do botão.
-   */
-  private void btnLeaveActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnLeaveActionPerformed
+  private void btnLeaveActionPerformed(java.awt.event.ActionEvent evt) {
     java.awt.EventQueue.invokeLater(
         () -> {
           new Login().setVisible(true);
         });
     this.setVisible(false);
-  } // GEN-LAST:event_btnLeaveActionPerformed
+  }
 
-  /**
-   * Método principal para inicializar a aplicação.
-   *
-   * @param args os argumentos da linha de comando.
-   */
   public static void main(String args[]) {
     try {
       for (javax.swing.UIManager.LookAndFeelInfo info :
@@ -308,7 +250,6 @@ public class MainMenu extends javax.swing.JFrame {
           .log(java.util.logging.Level.SEVERE, null, ex);
     }
 
-    /* Cria e exibe o menu principal */
     java.awt.EventQueue.invokeLater(
         () -> {
           new MainMenu(new User()).setVisible(true);
@@ -326,11 +267,6 @@ public class MainMenu extends javax.swing.JFrame {
 
   // End of variables declaration//GEN-END:variables
 
-  /**
-   * Define as permissões de acesso aos botões com base no tipo de usuário.
-   *
-   * <p>Este método desabilita certos botões para usuários do tipo empregado.
-   */
   private void setPermissions() {
     if (currentUser.getUserType() == UserType.EMPLOYEE) {
       btnEditProduct.setEnabled(false);

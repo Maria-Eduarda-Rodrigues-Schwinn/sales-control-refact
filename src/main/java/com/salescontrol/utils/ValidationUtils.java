@@ -6,27 +6,10 @@ import java.util.Date;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
-/**
- * Classe utilitária para validação de entradas.
- *
- * <p>Esta classe fornece métodos para validar entradas de produtos e vendas, garantindo que todas
- * as entradas fornecidas atendam aos critérios esperados.
- */
 public class ValidationUtils {
 
-  /** Comprimento máximo do nome do produto. */
   private static final int MAX_NAME_LENGTH = 100;
 
-  /**
-   * Valida as entradas fornecidas para um produto.
-   *
-   * @param name o nome do produto.
-   * @param category a categoria do produto.
-   * @param unitPrice o preço unitário do produto.
-   * @param unitOfMeasure a unidade de medida do produto.
-   * @param quantity a quantidade do produto.
-   * @throws IllegalArgumentException se alguma entrada for inválida.
-   */
   public static void validateProductInputs(
       String name, String category, double unitPrice, String unitOfMeasure, int quantity) {
     if (!isValidName(name)) {
@@ -75,22 +58,10 @@ public class ValidationUtils {
     }
   }
 
-  /**
-   * Valida o nome do produto.
-   *
-   * @param name o nome do produto.
-   * @return true se o nome é válido, caso contrário false.
-   */
   public static boolean isValidName(String name) {
     return !name.isEmpty() && !Pattern.matches("\\d+", name) && name.length() <= MAX_NAME_LENGTH;
   }
 
-  /**
-   * Valida a categoria do produto.
-   *
-   * @param category a categoria do produto.
-   * @return true se a categoria é válida, caso contrário false.
-   */
   public static boolean isValidCategory(String category) {
     for (Category c : Category.values()) {
       if (c.getTranslation().equals(category)) {
@@ -100,12 +71,6 @@ public class ValidationUtils {
     return false;
   }
 
-  /**
-   * Valida a unidade de medida do produto.
-   *
-   * @param unitOfMeasure a unidade de medida do produto.
-   * @return true se a unidade de medida é válida, caso contrário false.
-   */
   public static boolean isValidUnitOfMeasure(String unitOfMeasure) {
     for (UnitOfMeasure uom : UnitOfMeasure.values()) {
       if (uom.getTranslation().equals(unitOfMeasure)) {
@@ -115,13 +80,6 @@ public class ValidationUtils {
     return false;
   }
 
-  /**
-   * Valida as entradas fornecidas para uma venda.
-   *
-   * @param saleDate a data da venda.
-   * @param totalValue o valor total da venda.
-   * @throws IllegalArgumentException se alguma entrada for inválida.
-   */
   public static void validateSaleInputs(Date saleDate, double totalValue) {
     if (saleDate == null || !isValidDate(saleDate)) {
       JOptionPane.showMessageDialog(
@@ -142,12 +100,6 @@ public class ValidationUtils {
     }
   }
 
-  /**
-   * Valida se a data é válida.
-   *
-   * @param date a data.
-   * @return true se a data é válida, caso contrário false.
-   */
   public static boolean isValidDate(Date date) {
     return date.before(new Date());
   }

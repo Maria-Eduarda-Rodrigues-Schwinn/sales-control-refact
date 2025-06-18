@@ -11,23 +11,10 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-/**
- * Classe para a tela registrar produtos.
- *
- * <p>Esta classe estende JFrame e fornece a interface gráfica para o registro de produtos. Permite
- * adicionar novos produtos, limpar campos e navegar para outras telas como registro de venda,
- * edição de produto e relatório de vendas.
- */
 public class RegisterProduct extends javax.swing.JFrame {
 
-  /** Usuário atual que está utilizando a tela de registro de produtos. */
   private final User currentUser;
 
-  /**
-   * Construtor para inicializar a tela de registrar produtos com o usuário atual.
-   *
-   * @param user o usuário atual.
-   */
   public RegisterProduct(User user) {
     this.currentUser = user;
     initComponents();
@@ -372,59 +359,27 @@ public class RegisterProduct extends javax.swing.JFrame {
     setLocationRelativeTo(null);
   } // </editor-fold>//GEN-END:initComponents
 
-  /**
-   * Ação do item de menu para registrar uma venda.
-   *
-   * <p>Abre a tela de registro de venda.
-   *
-   * @param evt o evento de ação.
-   */
-  private void itRegisterSaleActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_itRegisterSaleActionPerformed
+  private void itRegisterSaleActionPerformed(java.awt.event.ActionEvent evt) {
     RegisterSale registerSale = new RegisterSale(currentUser);
     registerSale.setVisible(true);
     this.setVisible(false);
-  } // GEN-LAST:event_itRegisterSaleActionPerformed
+  }
 
-  /**
-   * Ação do item de menu para editar um produto.
-   *
-   * <p>Abre a tela de edição de produto.
-   *
-   * @param evt o evento de ação.
-   */
-  private void itEditProductActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_itEditProductActionPerformed
+  private void itEditProductActionPerformed(java.awt.event.ActionEvent evt) {
     EditProduct editProduct = new EditProduct(currentUser);
     editProduct.setVisible(true);
     this.setVisible(false);
-  } // GEN-LAST:event_itEditProductActionPerformed
+  }
 
-  /**
-   * Ação do item de menu para visualizar o relatório de vendas.
-   *
-   * <p>Abre a tela de relatório de vendas.
-   *
-   * @param evt o evento de ação.
-   */
-  private void itSalesReportActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_itSalesReportActionPerformed
+  private void itSalesReportActionPerformed(java.awt.event.ActionEvent evt) {
     java.awt.EventQueue.invokeLater(
         () -> {
           new SalesReport(currentUser).setVisible(true);
         });
     this.setVisible(false);
-  } // GEN-LAST:event_itSalesReportActionPerformed
+  }
 
-  /**
-   * Ação do item de menu para sair.
-   *
-   * <p>Abre uma caixa de diálogo de confirmação de logout.
-   *
-   * @param evt o evento de ação.
-   */
-  private void itLeaveActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_itLeaveActionPerformed
+  private void itLeaveActionPerformed(java.awt.event.ActionEvent evt) {
     UIManager.put("OptionPane.yesButtonText", "Sim");
     UIManager.put("OptionPane.noButtonText", "Não");
 
@@ -437,35 +392,17 @@ public class RegisterProduct extends javax.swing.JFrame {
           });
       this.setVisible(false);
     }
-  } // GEN-LAST:event_itLeaveActionPerformed
+  }
 
-  /**
-   * Ação do botão para limpar os campos de entrada.
-   *
-   * <p>Limpa todos os campos de entrada na tela de registro de produto.
-   *
-   * @param evt o evento de ação.
-   */
-  private void btnClearFieldsActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnClearFieldsActionPerformed
+  private void btnClearFieldsActionPerformed(java.awt.event.ActionEvent evt) {
     txtName.setText("");
     txtQuantity.setText("");
     txtUnitPrice.setText("");
     comboCategoryBox.setSelectedIndex(0);
     comboUnitOfMeasureBox.setSelectedIndex(0);
-  } // GEN-LAST:event_btnClearFieldsActionPerformed
+  }
 
-  /**
-   * Ação do botão para adicionar um novo produto.
-   *
-   * <p>Adiciona um novo produto com base nos dados fornecidos e exibe uma mensagem de confirmação.
-   * Exibe mensagens de erro se os campos de entrada estiverem vazios ou contiverem valores
-   * inválidos.
-   *
-   * @param evt o evento de ação.
-   */
-  private void btnAddProductActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddProductActionPerformed
+  private void btnAddProductActionPerformed(java.awt.event.ActionEvent evt) {
     String name = txtName.getText().trim();
     String quantityStr = txtQuantity.getText().trim();
     String unitPriceStr = txtUnitPrice.getText().trim();
@@ -505,7 +442,7 @@ public class RegisterProduct extends javax.swing.JFrame {
       ValidationUtils.validateProductInputs(
           name, selectedCategoryDescription, unitPrice, selectedUnitOfMeasure, quantity);
     } catch (IllegalArgumentException e) {
-      return; // Validação falhou, mensagem de erro já foi exibida.
+      return;
     }
 
     Product product = new Product();
@@ -521,13 +458,8 @@ public class RegisterProduct extends javax.swing.JFrame {
     JOptionPane.showMessageDialog(this, "Produto adicionado com sucesso!");
 
     btnClearFieldsActionPerformed(evt);
-  } // GEN-LAST:event_btnAddProductActionPerformed
+  }
 
-  /**
-   * Ponto de entrada principal da aplicação.
-   *
-   * @param args argumentos da linha de comando.
-   */
   public static void main(String args[]) {
     try {
       for (javax.swing.UIManager.LookAndFeelInfo info :
@@ -575,13 +507,6 @@ public class RegisterProduct extends javax.swing.JFrame {
 
   // End of variables declaration//GEN-END:variables
 
-  /**
-   * Obtém as descrições das categorias de produto.
-   *
-   * <p>Este método retorna uma lista de descrições de todas as categorias de produto.
-   *
-   * @return um array de Strings com as descrições das categorias de produto.
-   */
   private static String[] getCategoryDescriptions() {
     Category[] unitOfMeasure = Category.values();
     String[] descriptions = new String[unitOfMeasure.length];
@@ -591,12 +516,6 @@ public class RegisterProduct extends javax.swing.JFrame {
     return descriptions;
   }
 
-  /**
-   * Obtém a categoria de produto a partir da descrição.
-   *
-   * @param description a descrição da categoria.
-   * @return a categoria correspondente à descrição ou null se não encontrado.
-   */
   private Category getCategoryFromDescription(String description) {
     for (Category category : Category.values()) {
       if (category.getTranslation().equals(description)) {
@@ -606,13 +525,6 @@ public class RegisterProduct extends javax.swing.JFrame {
     return null;
   }
 
-  /**
-   * Obtém as descrições das unidades de medida.
-   *
-   * <p>Este método retorna uma lista de descrições de todas as unidades de medida.
-   *
-   * @return um array de Strings com as descrições das unidades de medida.
-   */
   private static String[] getUnitOfMeasureDescriptions() {
     UnitOfMeasure[] unitOfMeasure = UnitOfMeasure.values();
     String[] descriptions = new String[unitOfMeasure.length];
@@ -622,14 +534,6 @@ public class RegisterProduct extends javax.swing.JFrame {
     return descriptions;
   }
 
-  /**
-   * Obtém a unidade de medida a partir da descrição.
-   *
-   * <p>Este método retorna a unidade de medida correspondente à descrição fornecida.
-   *
-   * @param description a descrição da unidade de medida.
-   * @return a unidade de medida correspondente à descrição ou null se não encontrado.
-   */
   private UnitOfMeasure getUnitOfMeasureFromDescription(String description) {
     for (UnitOfMeasure unitOfMeasure : UnitOfMeasure.values()) {
       if (unitOfMeasure.getTranslation().equals(description)) {
@@ -639,11 +543,6 @@ public class RegisterProduct extends javax.swing.JFrame {
     return null;
   }
 
-  /**
-   * Define as permissões de acesso aos itens do menu com base no tipo de usuário.
-   *
-   * <p>Este método desabilita certos itens do menu para usuários do tipo empregado.
-   */
   private void setPermissions() {
     if (currentUser.getUserType() == UserType.EMPLOYEE) {
       itEditProduct.setEnabled(false);
