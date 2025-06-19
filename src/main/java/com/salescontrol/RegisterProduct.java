@@ -1,12 +1,11 @@
 package com.salescontrol;
 
-import com.salescontrol.data.product.ProductDao;
 import com.salescontrol.domain.Product;
 import com.salescontrol.domain.User;
 import com.salescontrol.enuns.Category;
 import com.salescontrol.enuns.UnitOfMeasure;
 import com.salescontrol.enuns.UserType;
-import com.salescontrol.utils.ValidationUtils;
+import com.salescontrol.service.ProductService;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -428,7 +427,7 @@ public class RegisterProduct extends javax.swing.JFrame {
       unitPrice = Double.parseDouble(unitPriceStr);
     } catch (NumberFormatException e) {
       JOptionPane.showMessageDialog(
-          this, "O preço unitário deve ser um número decimal.", "Erro", JOptionPane.ERROR_MESSAGE);
+          this, "O preço unitário deve ser um número.", "Erro", JOptionPane.ERROR_MESSAGE);
       return;
     }
 
@@ -438,13 +437,6 @@ public class RegisterProduct extends javax.swing.JFrame {
     String selectedUnitOfMeasure = (String) comboUnitOfMeasureBox.getSelectedItem();
     UnitOfMeasure unitOfMeasure = getUnitOfMeasureFromDescription(selectedUnitOfMeasure);
 
-    try {
-      ValidationUtils.validateProductInputs(
-          name, selectedCategoryDescription, unitPrice, selectedUnitOfMeasure, quantity);
-    } catch (IllegalArgumentException e) {
-      return;
-    }
-
     Product product = new Product();
     product.setName(name);
     product.setCategory(category);
@@ -452,12 +444,14 @@ public class RegisterProduct extends javax.swing.JFrame {
     product.setUnitOfMeasure(unitOfMeasure);
     product.setQuantity(quantity);
 
-    ProductDao productDao = new ProductDao();
-    productDao.save(product);
-
-    JOptionPane.showMessageDialog(this, "Produto adicionado com sucesso!");
-
-    btnClearFieldsActionPerformed(evt);
+    ProductService productService = new ProductService();
+    try {
+      productService.addProduct(product);
+      JOptionPane.showMessageDialog(this, "Produto adicionado com sucesso!");
+      btnClearFieldsActionPerformed(evt);
+    } catch (IllegalArgumentException ex) {
+      JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    }
   }
 
   public static void main(String args[]) {
