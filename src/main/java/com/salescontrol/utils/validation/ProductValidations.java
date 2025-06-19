@@ -4,6 +4,7 @@ import com.salescontrol.domain.Product;
 import com.salescontrol.enuns.Category;
 import com.salescontrol.enuns.UnitOfMeasure;
 import com.salescontrol.exception.ProductValidationException;
+import com.salescontrol.exception.ValidationException;
 import java.util.regex.Pattern;
 
 public class ProductValidations {
@@ -98,13 +99,12 @@ public class ProductValidations {
       double unitPrice = Double.parseDouble(unitPriceStr);
 
       if (unitPrice <= 0)
-        throw new ProductValidationException(
-            "Preço unitário inválido. Deve ser um valor positivo.");
+        throw new ValidationException("Preço unitário inválido. Deve ser um valor positivo.");
 
       return unitPrice;
 
     } catch (NumberFormatException e) {
-      throw new ProductValidationException("O preço unitário deve ser um número válido.", e);
+      throw new ValidationException("O preço unitário deve ser um número válido.", e);
     }
   }
 
@@ -113,12 +113,12 @@ public class ProductValidations {
       int quantity = Integer.parseInt(quantityStr);
 
       if (quantity < 0)
-        throw new ProductValidationException("Quantidade inválida. Deve ser um valor positivo.");
+        throw new ValidationException("Quantidade inválida. Deve ser um valor positivo.");
 
       return quantity;
 
     } catch (NumberFormatException e) {
-      throw new ProductValidationException("A quantidade deve ser um número inteiro.", e);
+      throw new ValidationException("A quantidade deve ser um número inteiro.", e);
     }
   }
 }

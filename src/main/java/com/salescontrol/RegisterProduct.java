@@ -5,6 +5,7 @@ import com.salescontrol.enuns.Category;
 import com.salescontrol.enuns.UnitOfMeasure;
 import com.salescontrol.enuns.UserType;
 import com.salescontrol.exception.ProductValidationException;
+import com.salescontrol.exception.ValidationException;
 import com.salescontrol.service.ProductService;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -414,7 +415,7 @@ public class RegisterProduct extends javax.swing.JFrame {
           name, quantityStr, unitPriceStr, selectedCategoryDescription, selectedUnitOfMeasure);
       JOptionPane.showMessageDialog(this, "Produto adicionado com sucesso!");
       btnClearFieldsActionPerformed(evt);
-    } catch (ProductValidationException ex) {
+    } catch (ProductValidationException | ValidationException ex) {
       JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }
   }

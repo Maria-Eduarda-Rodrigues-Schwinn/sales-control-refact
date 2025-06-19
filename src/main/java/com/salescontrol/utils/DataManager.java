@@ -41,4 +41,8 @@ public class DataManager {
   public void clearTemporaryCart() {
     temporaryCart.clear();
   }
+
+  public void removeFromTemporaryCart(int productId) {
+    temporaryCart.remove(productId);
+  }
 }

@@ -6,6 +6,7 @@ import com.salescontrol.domain.Product;
 import com.salescontrol.domain.User;
 import com.salescontrol.enuns.UserType;
 import com.salescontrol.exception.ProductValidationException;
+import com.salescontrol.exception.ValidationException;
 import com.salescontrol.service.ProductService;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -362,7 +363,7 @@ public class EditProduct extends javax.swing.JFrame {
 
         JOptionPane.showMessageDialog(this, "Produto atualizado com sucesso!");
         loadProductTable();
-      } catch (ProductValidationException ex) {
+      } catch (ProductValidationException | ValidationException ex) {
         JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
       }
     }

@@ -2,16 +2,18 @@ package com.salescontrol;
 
 import com.salescontrol.data.product.ProductDao;
 import com.salescontrol.data.product.ProductTableModel;
-import com.salescontrol.data.sale.SaleDao;
 import com.salescontrol.domain.Product;
-import com.salescontrol.domain.Sale;
 import com.salescontrol.domain.SaleProduct;
 import com.salescontrol.domain.User;
 import com.salescontrol.enuns.UserType;
+import com.salescontrol.exception.SaleNotFoundException;
+import com.salescontrol.exception.SaleValidationException;
+import com.salescontrol.exception.ValidationException;
 import com.salescontrol.service.ProductService;
+import com.salescontrol.service.SaleService;
 import com.salescontrol.utils.DataManager;
+import java.awt.HeadlessException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -551,89 +553,62 @@ public class RegisterSale extends javax.swing.JFrame {
     }
   }
 
-  private void btnAddProductToCartActionPerformed(
-      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddProductToCartActionPerformed
+  private void btnAddProductToCartActionPerformed(java.awt.event.ActionEvent evt) {
     int[] selectedRows = tblProducts.getSelectedRows();
     if (selectedRows.length == 0) {
       JOptionPane.showMessageDialog(
           this, "Por favor, selecione um produto para adicionar ao carrinho.");
       return;
     } else if (selectedRows.length > 1) {
-      JOptionPane.showMessageDialog(
-          this, "Por favor, selecione apenas um produto para adicionar ao carrinho.");
+      JOptionPane.showMessageDialog(this, "Por favor, selecione apenas um produto.");
       return;
     }
 
     int selectedRow = selectedRows[0];
+    Object productIdObj = tblProducts.getValueAt(selectedRow, 0);
+    int productId = Integer.parseInt(productIdObj.toString());
 
-    String quantityText = txtProductQuantity.getText();
+    String quantityText = txtProductQuantity.getText().trim();
     txtProductQuantity.setText("");
-    if (quantityText.isEmpty() || quantityText.equals("0")) {
-      JOptionPane.showMessageDialog(
-          this, "Por favor, insira uma quantidade válida.", "Erro", JOptionPane.ERROR_MESSAGE);
-      return;
-    }
 
-    int quantity;
+    SaleService saleService = new SaleService();
     try {
-      quantity = Integer.parseInt(quantityText);
-      if (quantity <= 0) {
-        JOptionPane.showMessageDialog(
-            this, "A quantidade deve ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
-        return;
-      }
-    } catch (NumberFormatException e) {
-      JOptionPane.showMessageDialog(
-          this, "A quantidade deve ser um número inteiro.", "Erro", JOptionPane.ERROR_MESSAGE);
-      return;
-    }
+      Product product = saleService.addProductToCart(productId, quantityText);
 
-    try {
-      Object productIdObject = tblProducts.getValueAt(selectedRow, 0);
+      DefaultTableModel cartModel = (DefaultTableModel) tblCart.getModel();
 
-      int productId = Integer.parseInt(productIdObject.toString());
-      ProductDao productDao = new ProductDao();
-      Product product = productDao.getProductById(productId);
+      int quantityToAdd = Integer.parseInt(quantityText);
 
-      if (product != null) {
-        if (quantity > product.getQuantity()) {
-          JOptionPane.showMessageDialog(
-              this,
-              "A quantidade inserida é maior do que a quantidade disponível em estoque.",
-              "Erro",
-              JOptionPane.ERROR_MESSAGE);
-          return;
+      boolean found = false;
+      for (int i = 0; i < cartModel.getRowCount(); i++) {
+        int existingProductId = Integer.parseInt(cartModel.getValueAt(i, 0).toString());
+        if (existingProductId == productId) {
+          int currentQuantity = Integer.parseInt(cartModel.getValueAt(i, 3).toString());
+          int updatedQuantity = currentQuantity + quantityToAdd;
+          cartModel.setValueAt(updatedQuantity, i, 3);
+          found = true;
+          break;
         }
+      }
 
-        product.setQuantity(product.getQuantity() - quantity);
-        productDao.update(product);
-
-        DefaultTableModel cartModel = (DefaultTableModel) tblCart.getModel();
+      if (!found) {
         cartModel.addRow(
             new Object[] {
               product.getId(),
               product.getName(),
               product.getCategory().getTranslation(),
-              quantity,
+              quantityToAdd,
               product.getUnitPrice(),
               product.getUnitOfMeasure().getTranslation()
             });
-
-        loadProductTable();
-
-        DataManager.getInstance().addToTemporaryCart(productId, quantity);
-
-        JOptionPane.showMessageDialog(this, "Produto adicionado ao carrinho!");
-      } else {
-        JOptionPane.showMessageDialog(
-            this, "Produto não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
       }
-    } catch (ClassCastException e) {
-      System.out.println("Erro de ClassCastException ao obter o ID do produto: " + e.getMessage());
-      e.printStackTrace();
-    } catch (Exception e) {
-      System.out.println("Erro ao adicionar produto ao carrinho: " + e.getMessage());
-      e.printStackTrace();
+
+      loadProductTable();
+      DataManager.getInstance().addToTemporaryCart(productId, quantityToAdd);
+
+      JOptionPane.showMessageDialog(this, "Produto adicionado ao carrinho!");
+    } catch (SaleValidationException | SaleNotFoundException | ValidationException e) {
+      JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -646,49 +621,29 @@ public class RegisterSale extends javax.swing.JFrame {
     }
 
     List<SaleProduct> saleProducts = new ArrayList<>();
-    ProductDao productDao = new ProductDao();
     for (int i = 0; i < cartModel.getRowCount(); i++) {
-      Object productIdObject = cartModel.getValueAt(i, 0);
-      int productId = Integer.parseInt(productIdObject.toString());
+      int productId = Integer.parseInt(cartModel.getValueAt(i, 0).toString());
+      int quantity = Integer.parseInt(cartModel.getValueAt(i, 3).toString());
+      double unitPrice = Double.parseDouble(cartModel.getValueAt(i, 4).toString());
 
-      Object quantityObject = cartModel.getValueAt(i, 3);
-      int quantity = Integer.parseInt(quantityObject.toString());
-
-      Object unitPriceObject = cartModel.getValueAt(i, 4);
-      double unitPrice = Double.parseDouble(unitPriceObject.toString());
-
-      Product product = productDao.getProductById(productId);
+      ProductService productService = new ProductService();
+      Product product = productService.getProductById(productId);
 
       SaleProduct saleProduct = new SaleProduct(product, quantity, unitPrice);
       saleProducts.add(saleProduct);
     }
 
-    SaleDao saleDao = new SaleDao();
-    Sale sale = new Sale();
-    sale.setSaleDate(new Date());
-
-    double total = 0.0;
-    for (int i = 0; i < cartModel.getRowCount(); i++) {
-      Object quantityObject = cartModel.getValueAt(i, 3);
-      int quantity = Integer.parseInt(quantityObject.toString());
-      Object unitPriceObject = cartModel.getValueAt(i, 4);
-      double unitPrice = Double.parseDouble(unitPriceObject.toString());
-      total += quantity * unitPrice;
-    }
-
-    sale.setTotalValue(total);
-
+    SaleService saleService = new SaleService();
     try {
-      saleDao.saveSaleWithProducts(sale, saleProducts);
-      System.out.println("Venda salva com sucesso");
-    } catch (Exception e) {
-      System.out.println("Erro ao salvar venda: " + e.getMessage());
+      saleService.finalizeSale(saleProducts);
+      cartModel.setRowCount(0);
+      loadProductTable();
+      DataManager.getInstance().clearTemporaryCart();
+      JOptionPane.showMessageDialog(this, "Venda finalizada com sucesso!");
+    } catch (HeadlessException ex) {
+      JOptionPane.showMessageDialog(
+          this, "Erro ao finalizar venda: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }
-
-    cartModel.setRowCount(0);
-    loadProductTable();
-
-    JOptionPane.showMessageDialog(this, "Venda finalizada com sucesso!");
   }
 
   private void btnClearCartActionPerformed(java.awt.event.ActionEvent evt) {
@@ -738,6 +693,8 @@ public class RegisterSale extends javax.swing.JFrame {
       cartModel.removeRow(selectedRow);
 
       loadProductTable();
+
+      DataManager.getInstance().removeFromTemporaryCart(productId);
 
       JOptionPane.showMessageDialog(this, "Produto removido do carrinho!");
     }
