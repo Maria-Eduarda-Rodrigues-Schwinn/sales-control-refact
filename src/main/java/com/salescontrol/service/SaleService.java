@@ -7,10 +7,13 @@ import com.salescontrol.data.sale.SaleDao;
 import com.salescontrol.domain.Product;
 import com.salescontrol.domain.Sale;
 import com.salescontrol.domain.SaleProduct;
+import com.salescontrol.dto.SaleFilterDTO;
 import com.salescontrol.exception.SaleNotFoundException;
 import com.salescontrol.exception.SaleValidationException;
+import com.salescontrol.utils.validation.SaleValidations;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SaleService {
   private final ProductDao productDao = new ProductDao();
@@ -47,5 +50,37 @@ public class SaleService {
     sale.setTotalValue(total);
 
     saleDao.saveSaleWithProducts(sale, saleProducts);
+  }
+
+  public List<Sale> filterSales(SaleFilterDTO filter) {
+    SaleValidations.FilterParsedData validated = SaleValidations.parseAndValidate(filter);
+    List<Sale> allSales = saleDao.getAllSales();
+
+    return allSales.stream()
+        .filter(
+            sale ->
+                (validated.getFromDate() == null
+                        || !sale.getSaleDate().before(validated.getFromDate()))
+                    && (validated.getToDate() == null
+                        || !sale.getSaleDate().after(validated.getToDate()))
+                    && (validated.getCategory() == null
+                        || validated.getCategory().equals("Todas")
+                        || sale.getProductsSold().stream()
+                            .anyMatch(
+                                sp ->
+                                    sp.getProduct()
+                                        .getCategory()
+                                        .getTranslation()
+                                        .equals(validated.getCategory())))
+                    && (validated.getProductName() == null
+                        || validated.getProductName().isBlank()
+                        || sale.getProductsSold().stream()
+                            .anyMatch(
+                                sp ->
+                                    sp.getProduct()
+                                        .getName()
+                                        .toLowerCase()
+                                        .contains(validated.getProductName().toLowerCase()))))
+        .collect(Collectors.toList());
   }
 }

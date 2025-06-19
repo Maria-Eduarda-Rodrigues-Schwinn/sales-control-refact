@@ -5,16 +5,17 @@ import com.salescontrol.domain.Product;
 import com.salescontrol.domain.Sale;
 import com.salescontrol.domain.SaleProduct;
 import com.salescontrol.domain.User;
+import com.salescontrol.dto.SaleFilterDTO;
 import com.salescontrol.enuns.Category;
 import com.salescontrol.enuns.UserType;
+import com.salescontrol.exception.SaleValidationException;
+import com.salescontrol.service.SaleService;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -424,95 +425,56 @@ public class SalesReport extends javax.swing.JFrame {
   private void btnFilterActionPerformed(java.awt.event.ActionEvent evt) {
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     dateFormat.setLenient(false);
-    final String fromDateString = txtFromDate.getText().trim();
-    final String toDateString = txtToDate.getText().trim();
-    final String searchedProductName = txtSearchedProductName.getText().trim().toLowerCase();
-    final String selectedCategory = (String) comboSelectedFilterBox.getSelectedItem();
 
-    Date fromDate = null;
-    Date toDate = null;
+    String fromDateString = txtFromDate.getText().trim();
+    String toDateString = txtToDate.getText().trim();
+    String searchedProductName = txtSearchedProductName.getText().trim();
+    String selectedCategory = (String) comboSelectedFilterBox.getSelectedItem();
 
-    if (!fromDateString.isEmpty() || !toDateString.isEmpty()) {
-      try {
-        fromDate = dateFormat.parse(fromDateString);
-        toDate = dateFormat.parse(toDateString);
+    SaleFilterDTO filter = new SaleFilterDTO();
+    filter.setFromDate(fromDateString);
+    filter.setToDate(toDateString);
+    filter.setProductName(searchedProductName);
+    filter.setCategory(selectedCategory);
 
-        if (fromDate.after(toDate)) {
-          JOptionPane.showMessageDialog(
-              this,
-              "A data inicial deve ser antes da data final.",
-              "Erro de Data",
-              JOptionPane.ERROR_MESSAGE);
-          return;
+    try {
+      SaleService saleService = new SaleService();
+      List<Sale> filteredSales = saleService.filterSales(filter);
+
+      DefaultTableModel model = (DefaultTableModel) tblOfProductsSold.getModel();
+      model.setRowCount(0);
+
+      for (Sale sale : filteredSales) {
+        for (SaleProduct saleProduct : sale.getProductsSold()) {
+          Product product = saleProduct.getProduct();
+          if ((selectedCategory.equals("Todas")
+                  || product.getCategory().getTranslation().equals(selectedCategory))
+              && (searchedProductName.isEmpty()
+                  || product.getName().toLowerCase().contains(searchedProductName.toLowerCase()))) {
+
+            model.addRow(
+                new Object[] {
+                  sale.getId(),
+                  sale.getSaleDate(),
+                  product.getName(),
+                  product.getUnitPrice(),
+                  product.getUnitOfMeasure().getTranslation(),
+                  saleProduct.getQuantity(),
+                  sale.getTotalValue()
+                });
+          }
         }
-      } catch (ParseException e) {
+      }
+
+      if (model.getRowCount() == 0) {
         JOptionPane.showMessageDialog(
             this,
-            "Formato de data inválido. Use o formato dd/MM/yyyy.",
-            "Erro de Formato",
-            JOptionPane.ERROR_MESSAGE);
-        return;
+            "Nenhuma venda encontrada para os critérios especificados.",
+            "Sem Resultados",
+            JOptionPane.INFORMATION_MESSAGE);
       }
-    }
-
-    final Date finalFromDate = fromDate;
-    final Date finalToDate = toDate;
-
-    DefaultTableModel model = (DefaultTableModel) tblOfProductsSold.getModel();
-    model.setRowCount(0);
-
-    SaleDao saleDao = new SaleDao();
-    List<Sale> filteredSales =
-        saleDao.getAllSales().stream()
-            .filter(
-                sale ->
-                    (finalFromDate == null || !sale.getSaleDate().before(finalFromDate))
-                        && (finalToDate == null || !sale.getSaleDate().after(finalToDate))
-                        && (selectedCategory.equals("Todas")
-                            || sale.getProductsSold().stream()
-                                .anyMatch(
-                                    sp ->
-                                        sp.getProduct()
-                                            .getCategory()
-                                            .getTranslation()
-                                            .equals(selectedCategory)))
-                        && (searchedProductName.isEmpty()
-                            || sale.getProductsSold().stream()
-                                .anyMatch(
-                                    sp ->
-                                        sp.getProduct()
-                                            .getName()
-                                            .toLowerCase()
-                                            .contains(searchedProductName))))
-            .collect(Collectors.toList());
-
-    for (Sale sale : filteredSales) {
-      for (SaleProduct saleProduct : sale.getProductsSold()) {
-        Product product = saleProduct.getProduct();
-        if ((selectedCategory.equals("Todas")
-                || product.getCategory().getTranslation().equals(selectedCategory))
-            && (searchedProductName.isEmpty()
-                || product.getName().toLowerCase().contains(searchedProductName))) {
-          model.addRow(
-              new Object[] {
-                sale.getId(),
-                sale.getSaleDate(),
-                product.getName(),
-                product.getUnitPrice(),
-                product.getUnitOfMeasure().getTranslation(),
-                saleProduct.getQuantity(),
-                sale.getTotalValue()
-              });
-        }
-      }
-    }
-
-    if (model.getRowCount() == 0) {
-      JOptionPane.showMessageDialog(
-          this,
-          "Nenhuma venda encontrada para os critérios especificados.",
-          "Sem Resultados",
-          JOptionPane.INFORMATION_MESSAGE);
+    } catch (SaleValidationException e) {
+      JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }
   }
 
