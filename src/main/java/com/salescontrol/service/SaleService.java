@@ -83,4 +83,8 @@ public class SaleService {
                                         .contains(validated.getProductName().toLowerCase()))))
         .collect(Collectors.toList());
   }
+
+  public List<Sale> getAllSales() {
+    return saleDao.getAllSales();
+  }
 }

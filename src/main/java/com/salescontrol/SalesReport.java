@@ -1,6 +1,5 @@
 package com.salescontrol;
 
-import com.salescontrol.data.sale.SaleDao;
 import com.salescontrol.domain.Product;
 import com.salescontrol.domain.Sale;
 import com.salescontrol.domain.SaleProduct;
@@ -623,8 +622,8 @@ public class SalesReport extends javax.swing.JFrame {
     DefaultTableModel model = (DefaultTableModel) tblOfProductsSold.getModel();
     model.setRowCount(0);
 
-    SaleDao saleDao = new SaleDao();
-    List<Sale> allSales = saleDao.getAllSales();
+    SaleService saleService = new SaleService();
+    List<Sale> allSales = saleService.getAllSales();
 
     for (Sale sale : allSales) {
       for (SaleProduct saleProduct : sale.getProductsSold()) {
