@@ -7,6 +7,7 @@ import com.salescontrol.data.product.ProductDao;
 import com.salescontrol.domain.Product;
 import com.salescontrol.exception.ProductNotFoundException;
 import com.salescontrol.exception.ProductOperationException;
+import com.salescontrol.exception.ProductValidationException;
 import com.salescontrol.utils.validation.ProductValidations;
 import java.util.List;
 
@@ -50,5 +51,13 @@ public class ProductService {
   public void deleteProduct(int productId) {
     boolean deleted = productDao.delete(productId);
     if (!deleted) throw new ProductOperationException("Erro ao excluir o produto.");
+  }
+
+  public List<Product> searchProductsByName(String name) {
+    if (name == null || name.trim().isEmpty()) {
+      throw new ProductValidationException("Nome do produto não pode estar vazio.");
+    }
+
+    return productDao.searchProductsByName(name.trim());
   }
 }

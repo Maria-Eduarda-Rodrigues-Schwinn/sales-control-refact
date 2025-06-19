@@ -36,15 +36,4 @@ public class ProductDao {
                 .setParameter("name", "%" + name + "%")
                 .getResultList());
   }
-
-  public void updateProductQuantity(int productId, int quantity) {
-    TransactionDBUtil.execute(
-        em -> {
-          Product product = em.find(Product.class, productId);
-          if (product != null) {
-            product.setQuantity(quantity);
-            em.merge(product);
-          }
-        });
-  }
 }

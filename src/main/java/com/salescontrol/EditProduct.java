@@ -1,6 +1,5 @@
 package com.salescontrol;
 
-import com.salescontrol.data.product.ProductDao;
 import com.salescontrol.data.product.ProductTableModel;
 import com.salescontrol.domain.Product;
 import com.salescontrol.domain.User;
@@ -371,11 +370,16 @@ public class EditProduct extends javax.swing.JFrame {
   }
 
   private void btnDropSelectedProductActionPerformed(java.awt.event.ActionEvent evt) {
-    int selectedRow = tblProducts.getSelectedRow();
-    if (selectedRow == -1) {
+    int[] selectedRows = tblProducts.getSelectedRows();
+    if (selectedRows.length == 0) {
       JOptionPane.showMessageDialog(this, "Por favor, selecione um produto para excluir.");
       return;
+    } else if (selectedRows.length > 1) {
+      JOptionPane.showMessageDialog(this, "Por favor, selecione apenas um produto para excluir.");
+      return;
     }
+
+    int selectedRow = selectedRows[0];
 
     int productId = (int) tblProducts.getValueAt(selectedRow, 0);
 
@@ -403,13 +407,14 @@ public class EditProduct extends javax.swing.JFrame {
 
   private void btnSearchByProductNameActionPerformed(java.awt.event.ActionEvent evt) {
     String searchName = JOptionPane.showInputDialog(this, "Digite o nome do produto para buscar:");
-    if (searchName != null && !searchName.trim().isEmpty()) {
-      ProductDao productDao = new ProductDao();
-      List<Product> productList = productDao.searchProductsByName(searchName.trim());
+
+    ProductService productService = new ProductService();
+
+    try {
+      List<Product> productList = productService.searchProductsByName(searchName);
       tblProducts.setModel(new ProductTableModel(productList));
-    } else {
-      JOptionPane.showMessageDialog(
-          this, "Nome do produto não pode estar vazio.", "Erro", JOptionPane.ERROR_MESSAGE);
+    } catch (ProductValidationException ex) {
+      JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }
   }
 
