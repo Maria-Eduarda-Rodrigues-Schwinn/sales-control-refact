@@ -5,6 +5,8 @@ import com.salescontrol.data.product.ProductTableModel;
 import com.salescontrol.domain.Product;
 import com.salescontrol.domain.User;
 import com.salescontrol.enuns.UserType;
+import com.salescontrol.exception.ProductValidationException;
+import com.salescontrol.service.ProductService;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -330,69 +332,38 @@ public class EditProduct extends javax.swing.JFrame {
   }
 
   private void btnEditSelectedProductActionPerformed(java.awt.event.ActionEvent evt) {
-    int selectedRow = tblProducts.getSelectedRow();
-    if (selectedRow == -1) {
-      JOptionPane.showMessageDialog(this, "Por favor, selecione um produto para editar.");
+    int[] selectedRows = tblProducts.getSelectedRows();
+    if (selectedRows.length == 0) {
+      JOptionPane.showMessageDialog(
+          this, "Nenhum produto foi selecionado. Por favor, escolha um da lista para editar.");
+      return;
+    } else if (selectedRows.length > 1) {
+      JOptionPane.showMessageDialog(this, "Por favor, selecione apenas um produto para edição.");
       return;
     }
 
+    int selectedRow = selectedRows[0];
     int productId = (int) tblProducts.getValueAt(selectedRow, 0);
-    String productUnitPrice = tblProducts.getValueAt(selectedRow, 3).toString();
-    String productQuantity = tblProducts.getValueAt(selectedRow, 5).toString();
+    String currentUnitPrice = tblProducts.getValueAt(selectedRow, 3).toString();
+    String currentQuantity = tblProducts.getValueAt(selectedRow, 5).toString();
 
-    String newProductUnitPrice =
-        JOptionPane.showInputDialog(this, "Novo preço unitário do produto:", productUnitPrice);
-    String newProductQuantity =
-        JOptionPane.showInputDialog(this, "Nova quantidade do produto:", productQuantity);
+    String newUnitPrice =
+        JOptionPane.showInputDialog(this, "Novo preço unitário do produto:", currentUnitPrice);
+    String newQuantity =
+        JOptionPane.showInputDialog(this, "Nova quantidade do produto:", currentQuantity);
 
-    if (newProductUnitPrice != null && newProductQuantity != null) {
-      double unitPrice;
-      int quantity;
-
+    if (newUnitPrice != null && newQuantity != null) {
+      ProductService productService = new ProductService();
       try {
-        unitPrice = Double.parseDouble(newProductUnitPrice);
-        if (unitPrice <= 0) {
-          JOptionPane.showMessageDialog(
-              this, "O preço unitário deve ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
-          return;
-        }
-      } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(
-            this,
-            "O preço unitário deve ser um número decimal.",
-            "Erro",
-            JOptionPane.ERROR_MESSAGE);
-        return;
-      }
+        productService.updateProduct(productId, newUnitPrice, newQuantity);
 
-      try {
-        quantity = Integer.parseInt(newProductQuantity);
-        if (quantity <= 0) {
-          JOptionPane.showMessageDialog(
-              this, "A quantidade deve ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
-          return;
-        }
-      } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(
-            this, "A quantidade deve ser um número inteiro.", "Erro", JOptionPane.ERROR_MESSAGE);
-        return;
-      }
-
-      ProductDao productDao = new ProductDao();
-      Product product = productDao.getProductById(productId);
-      if (product != null) {
-        product.setUnitPrice(unitPrice);
-        product.setQuantity(quantity);
-        productDao.update(product);
-
-        tblProducts.setValueAt(unitPrice, selectedRow, 3);
-        tblProducts.setValueAt(quantity, selectedRow, 5);
+        tblProducts.setValueAt(Double.valueOf(newUnitPrice), selectedRow, 3);
+        tblProducts.setValueAt(Integer.valueOf(newQuantity), selectedRow, 5);
 
         JOptionPane.showMessageDialog(this, "Produto atualizado com sucesso!");
         loadProductTable();
-      } else {
-        JOptionPane.showMessageDialog(
-            this, "Produto não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+      } catch (ProductValidationException ex) {
+        JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
       }
     }
   }

@@ -16,38 +16,19 @@ public class ProductValidations {
       String selectedCategoryDescription,
       String selectedUnitOfMeasure) {
 
-    if (name.isEmpty() || quantityStr.isEmpty() || unitPriceStr.isEmpty()) {
+    if (name.isEmpty() || quantityStr.isEmpty() || unitPriceStr.isEmpty())
       throw new ProductValidationException("Todos os campos devem ser preenchidos.");
-    }
-
-    int quantity;
-    double unitPrice;
-
-    try {
-      quantity = Integer.parseInt(quantityStr);
-    } catch (NumberFormatException e) {
-      throw new ProductValidationException("A quantidade deve ser um número inteiro.");
-    }
-
-    try {
-      unitPrice = Double.parseDouble(unitPriceStr);
-    } catch (NumberFormatException e) {
-      throw new ProductValidationException("O preço unitário deve ser um número.");
-    }
 
     Category category = getCategoryFromDescription(selectedCategoryDescription);
-    if (category == null) {
-      throw new ProductValidationException("Categoria inválida.");
-    }
+    if (category == null) throw new ProductValidationException("Categoria inválida.");
+
     UnitOfMeasure unitOfMeasure = getUnitOfMeasureFromDescription(selectedUnitOfMeasure);
-    if (unitOfMeasure == null) {
-      throw new ProductValidationException("Unidade de medida inválida.");
-    }
+    if (unitOfMeasure == null) throw new ProductValidationException("Unidade de medida inválida.");
 
     Product product = new Product();
     product.setName(name);
-    product.setQuantity(quantity);
-    product.setUnitPrice(unitPrice);
+    product.setQuantity(validateQuantity(quantityStr));
+    product.setUnitPrice(validateUnitPrice(unitPriceStr));
     product.setCategory(category);
     product.setUnitOfMeasure(unitOfMeasure);
 
@@ -57,30 +38,19 @@ public class ProductValidations {
   }
 
   private static void validate(Product product) {
-    if (!isValidName(product.getName())) {
+    if (!isValidName(product.getName()))
       throw new ProductValidationException(
           "Nome inválido. Não deve estar vazio, não deve conter apenas números e deve ter no máximo "
               + MAX_NAME_LENGTH
               + " caracteres.");
-    }
 
-    if (!isValidCategory(product.getCategory().getTranslation())) {
+    if (!isValidCategory(product.getCategory().getTranslation()))
       throw new ProductValidationException(
           "Categoria inválida. Por favor, selecione uma categoria válida.");
-    }
 
-    if (product.getUnitPrice() <= 0) {
-      throw new ProductValidationException("Preço unitário inválido. Deve ser um valor positivo.");
-    }
-
-    if (!isValidUnitOfMeasure(product.getUnitOfMeasure().getTranslation())) {
+    if (!isValidUnitOfMeasure(product.getUnitOfMeasure().getTranslation()))
       throw new ProductValidationException(
           "Unidade de medida inválida. Por favor, selecione uma unidade de medida válida.");
-    }
-
-    if (product.getQuantity() < 0) {
-      throw new ProductValidationException("Quantidade inválida. Não pode ser um valor negativo.");
-    }
   }
 
   private static boolean isValidName(String name) {
@@ -121,5 +91,34 @@ public class ProductValidations {
       }
     }
     return null;
+  }
+
+  public static double validateUnitPrice(String unitPriceStr) {
+    try {
+      double unitPrice = Double.parseDouble(unitPriceStr);
+
+      if (unitPrice <= 0)
+        throw new ProductValidationException(
+            "Preço unitário inválido. Deve ser um valor positivo.");
+
+      return unitPrice;
+
+    } catch (NumberFormatException e) {
+      throw new ProductValidationException("O preço unitário deve ser um número válido.", e);
+    }
+  }
+
+  public static int validateQuantity(String quantityStr) {
+    try {
+      int quantity = Integer.parseInt(quantityStr);
+
+      if (quantity < 0)
+        throw new ProductValidationException("Quantidade inválida. Deve ser um valor positivo.");
+
+      return quantity;
+
+    } catch (NumberFormatException e) {
+      throw new ProductValidationException("A quantidade deve ser um número inteiro.", e);
+    }
   }
 }
