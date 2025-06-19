@@ -9,6 +9,7 @@ import com.salescontrol.enuns.UserType;
 import com.salescontrol.exception.SaleNotFoundException;
 import com.salescontrol.exception.SaleValidationException;
 import com.salescontrol.exception.ValidationException;
+import com.salescontrol.service.CartService;
 import com.salescontrol.service.ProductService;
 import com.salescontrol.service.SaleService;
 import com.salescontrol.utils.DataManager;
@@ -648,24 +649,9 @@ public class RegisterSale extends javax.swing.JFrame {
 
   private void btnClearCartActionPerformed(java.awt.event.ActionEvent evt) {
     DefaultTableModel cartModel = (DefaultTableModel) tblCart.getModel();
-    ProductDao productDao = new ProductDao();
-    for (int i = 0; i < cartModel.getRowCount(); i++) {
-      Object productIdObject = cartModel.getValueAt(i, 0);
-      int productId = Integer.parseInt(productIdObject.toString());
-
-      Object quantityObject = cartModel.getValueAt(i, 3);
-      int quantity = Integer.parseInt(quantityObject.toString());
-
-      Product product = productDao.getProductById(productId);
-      if (product != null) {
-        product.setQuantity(product.getQuantity() + quantity);
-        productDao.update(product);
-      }
-    }
-    cartModel.setRowCount(0);
-
+    CartService cartService = new CartService();
+    cartService.clearCart(cartModel);
     loadProductTable();
-
     JOptionPane.showMessageDialog(this, "Carrinho limpo!");
   }
 
