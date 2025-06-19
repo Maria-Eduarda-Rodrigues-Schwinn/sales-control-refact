@@ -6,6 +6,7 @@ import static com.salescontrol.utils.validation.ProductValidations.validateUnitP
 import com.salescontrol.data.product.ProductDao;
 import com.salescontrol.domain.Product;
 import com.salescontrol.exception.ProductNotFoundException;
+import com.salescontrol.exception.ProductOperationException;
 import com.salescontrol.utils.validation.ProductValidations;
 import java.util.List;
 
@@ -44,5 +45,10 @@ public class ProductService {
 
   public Product getProductById(int id) {
     return productDao.getProductById(id);
+  }
+
+  public void deleteProduct(int productId) {
+    boolean deleted = productDao.delete(productId);
+    if (!deleted) throw new ProductOperationException("Erro ao excluir o produto.");
   }
 }

@@ -5,6 +5,7 @@ import com.salescontrol.data.product.ProductTableModel;
 import com.salescontrol.domain.Product;
 import com.salescontrol.domain.User;
 import com.salescontrol.enuns.UserType;
+import com.salescontrol.exception.ProductOperationException;
 import com.salescontrol.exception.ProductValidationException;
 import com.salescontrol.exception.ValidationException;
 import com.salescontrol.service.ProductService;
@@ -380,6 +381,7 @@ public class EditProduct extends javax.swing.JFrame {
 
     UIManager.put("OptionPane.yesButtonText", "Sim");
     UIManager.put("OptionPane.noButtonText", "Não");
+
     int confirm =
         JOptionPane.showConfirmDialog(
             this,
@@ -388,14 +390,13 @@ public class EditProduct extends javax.swing.JFrame {
             JOptionPane.YES_NO_OPTION);
 
     if (confirm == JOptionPane.YES_OPTION) {
-      ProductDao productDao = new ProductDao();
-      boolean deleted = productDao.delete(productId);
-      if (deleted) {
+      ProductService productService = new ProductService();
+      try {
+        productService.deleteProduct(productId);
         loadProductTable();
         JOptionPane.showMessageDialog(this, "Produto excluído com sucesso!");
-      } else {
-        JOptionPane.showMessageDialog(
-            this, "Erro ao excluir o produto.", "Erro", JOptionPane.ERROR_MESSAGE);
+      } catch (ProductOperationException ex) {
+        JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
       }
     }
   }
