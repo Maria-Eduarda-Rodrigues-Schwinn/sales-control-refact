@@ -18,7 +18,7 @@ public class SaleDao {
         });
   }
 
-  public void save(Sale sale, List<SaleProduct> saleProducts) {
+  public void saveSaleWithProducts(Sale sale, List<SaleProduct> saleProducts) {
     TransactionDBUtil.execute(
         em -> {
           Sale mergedSale = em.merge(sale);

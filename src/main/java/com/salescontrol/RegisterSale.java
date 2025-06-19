@@ -678,7 +678,7 @@ public class RegisterSale extends javax.swing.JFrame {
     sale.setTotalValue(total);
 
     try {
-      saleDao.save(sale, saleProducts);
+      saleDao.saveSaleWithProducts(sale, saleProducts);
       System.out.println("Venda salva com sucesso");
     } catch (Exception e) {
       System.out.println("Erro ao salvar venda: " + e.getMessage());
