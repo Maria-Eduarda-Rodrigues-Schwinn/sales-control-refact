@@ -1,6 +1,5 @@
 package com.salescontrol;
 
-import com.salescontrol.data.product.ProductDao;
 import com.salescontrol.data.product.ProductTableModel;
 import com.salescontrol.domain.Product;
 import com.salescontrol.domain.SaleProduct;
@@ -770,23 +769,12 @@ public class RegisterSale extends javax.swing.JFrame {
   @Override
   public void setVisible(boolean b) {
     if (!b) {
-      ProductDao productDao = new ProductDao();
-      Map<Integer, Integer> temporaryCart = DataManager.getInstance().getTemporaryCart();
-
-      for (Map.Entry<Integer, Integer> entry : temporaryCart.entrySet()) {
-        int productId = entry.getKey();
-        int quantity = entry.getValue();
-
-        Product product = productDao.getProductById(productId);
-        if (product != null) {
-          product.setQuantity(product.getQuantity() + quantity);
-          productDao.update(product);
-        }
-      }
-
-      DataManager.getInstance().clearTemporaryCart();
+      CartService cartService = new CartService();
+      cartService.restoreStockFromCart();
     }
+
     super.setVisible(b);
+
     if (b) {
       updateProductTable();
     }
