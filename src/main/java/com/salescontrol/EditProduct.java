@@ -460,8 +460,8 @@ public class EditProduct extends javax.swing.JFrame {
     DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
     model.setRowCount(0);
 
-    ProductDao productDao = new ProductDao();
-    List<Product> products = productDao.getAllProducts();
+    ProductService productService = new ProductService();
+    List<Product> products = productService.getAllProducts();
 
     for (Product product : products) {
       Object[] row = {
@@ -490,8 +490,8 @@ public class EditProduct extends javax.swing.JFrame {
   }
 
   private void loadProductTable() {
-    ProductDao productDao = new ProductDao();
-    List<Product> productList = productDao.getAllProducts();
+    ProductService productService = new ProductService();
+    List<Product> productList = productService.getAllProducts();
 
     SwingUtilities.invokeLater(
         () -> {

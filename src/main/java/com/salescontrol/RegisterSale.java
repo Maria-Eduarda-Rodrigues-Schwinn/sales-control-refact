@@ -8,6 +8,7 @@ import com.salescontrol.domain.Sale;
 import com.salescontrol.domain.SaleProduct;
 import com.salescontrol.domain.User;
 import com.salescontrol.enuns.UserType;
+import com.salescontrol.service.ProductService;
 import com.salescontrol.utils.DataManager;
 import java.util.ArrayList;
 import java.util.Date;
@@ -809,8 +810,8 @@ public class RegisterSale extends javax.swing.JFrame {
     DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
     model.setRowCount(0);
 
-    ProductDao productDao = new ProductDao();
-    List<Product> products = productDao.getAllProducts();
+    ProductService productService = new ProductService();
+    List<Product> products = productService.getAllProducts();
 
     productIdMap.clear();
     int rowIndex = 0;
@@ -863,8 +864,8 @@ public class RegisterSale extends javax.swing.JFrame {
   }
 
   private void loadProductTable() {
-    ProductDao productDao = new ProductDao();
-    List<Product> productList = productDao.getAllProducts();
+    ProductService productService = new ProductService();
+    List<Product> productList = productService.getAllProducts();
 
     SwingUtilities.invokeLater(
         () -> {

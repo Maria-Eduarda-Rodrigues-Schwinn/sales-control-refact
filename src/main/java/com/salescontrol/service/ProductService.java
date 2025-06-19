@@ -7,6 +7,7 @@ import com.salescontrol.data.product.ProductDao;
 import com.salescontrol.domain.Product;
 import com.salescontrol.exception.ProductNotFoundException;
 import com.salescontrol.utils.validation.ProductValidations;
+import java.util.List;
 
 public class ProductService {
   private final ProductDao productDao = new ProductDao();
@@ -35,5 +36,9 @@ public class ProductService {
     product.setUnitPrice(unitPrice);
     product.setQuantity(quantity);
     productDao.update(product);
+  }
+
+  public List<Product> getAllProducts() {
+    return productDao.getAllProducts();
   }
 }
