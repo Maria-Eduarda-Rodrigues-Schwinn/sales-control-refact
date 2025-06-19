@@ -6,6 +6,7 @@ import com.salescontrol.domain.Product;
 import com.salescontrol.domain.SaleProduct;
 import com.salescontrol.domain.User;
 import com.salescontrol.enuns.UserType;
+import com.salescontrol.exception.CartOperationException;
 import com.salescontrol.exception.SaleNotFoundException;
 import com.salescontrol.exception.SaleValidationException;
 import com.salescontrol.exception.ValidationException;
@@ -15,6 +16,7 @@ import com.salescontrol.service.SaleService;
 import com.salescontrol.utils.DataManager;
 import java.awt.HeadlessException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -656,33 +658,25 @@ public class RegisterSale extends javax.swing.JFrame {
   }
 
   private void btnRemoveSelectedItemFromCartTableActionPerformed(java.awt.event.ActionEvent evt) {
-    int selectedRow = tblCart.getSelectedRow();
-    if (selectedRow == -1) {
-      JOptionPane.showMessageDialog(
-          this, "Por favor, selecione um produto para remover do carrinho.");
+    int[] selectedRows = tblCart.getSelectedRows();
+    if (selectedRows.length == 0) {
+      JOptionPane.showMessageDialog(this, "Por favor, selecione ao menos um produto para remover.");
       return;
     }
 
     DefaultTableModel cartModel = (DefaultTableModel) tblCart.getModel();
-    Object productIdObject = cartModel.getValueAt(selectedRow, 0);
-    int productId = Integer.parseInt(productIdObject.toString());
+    CartService cartService = new CartService();
 
-    Object quantityObject = cartModel.getValueAt(selectedRow, 3);
-    int quantity = Integer.parseInt(quantityObject.toString());
-
-    ProductDao productDao = new ProductDao();
-    Product product = productDao.getProductById(productId);
-    if (product != null) {
-      product.setQuantity(product.getQuantity() + quantity);
-      productDao.update(product);
-
-      cartModel.removeRow(selectedRow);
+    try {
+      Arrays.sort(selectedRows);
+      for (int i = selectedRows.length - 1; i >= 0; i--) {
+        cartService.removeItemFromCart(cartModel, selectedRows[i]);
+      }
 
       loadProductTable();
-
-      DataManager.getInstance().removeFromTemporaryCart(productId);
-
-      JOptionPane.showMessageDialog(this, "Produto removido do carrinho!");
+      JOptionPane.showMessageDialog(this, "Produto(s) removido(s) do carrinho!");
+    } catch (CartOperationException ex) {
+      JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }
   }
 
