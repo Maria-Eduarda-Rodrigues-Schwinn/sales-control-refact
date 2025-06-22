@@ -1,7 +1,8 @@
 package com.salescontrol;
 
-import com.salescontrol.data.user.UserDao;
 import com.salescontrol.domain.User;
+import com.salescontrol.exception.InvalidCredentialsException;
+import com.salescontrol.service.UserService;
 import com.salescontrol.utils.Criptografia;
 import javax.swing.JOptionPane;
 
@@ -242,10 +243,9 @@ public class Login extends javax.swing.JFrame {
     String login = txtUsername.getText().trim();
     String password = Criptografia.getMD5(new String(txtPassword.getPassword()));
 
-    UserDao userDao = new UserDao();
-    User user = userDao.authenticate(login, password);
-
-    if (user != null) {
+    try {
+      UserService userService = new UserService();
+      User user = userService.authenticate(login, password);
       JOptionPane.showMessageDialog(
           this,
           "Olá "
@@ -255,10 +255,8 @@ public class Login extends javax.swing.JFrame {
               + ". Seja bem-vindo!");
       MainMenu mainMenu = new MainMenu(user);
       mainMenu.setVisible(true);
-      this.dispose();
-    } else {
-      JOptionPane.showMessageDialog(
-          this, "Login ou senha inválidos.", "Erro", JOptionPane.ERROR_MESSAGE);
+    } catch (InvalidCredentialsException e) {
+      JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }
   }
 
