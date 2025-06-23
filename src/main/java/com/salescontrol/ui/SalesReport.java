@@ -1,4 +1,10 @@
-package com.salescontrol;
+package com.salescontrol.ui;
+
+import static com.salescontrol.ui.manager.ScreenManager.showFrame;
+import static com.salescontrol.ui.manager.ScreenManager.showLogin;
+import static com.salescontrol.ui.manager.ScreenType.EDIT_PRODUCT;
+import static com.salescontrol.ui.manager.ScreenType.REGISTER_PRODUCT;
+import static com.salescontrol.ui.manager.ScreenType.REGISTER_SALE;
 
 import com.salescontrol.domain.Product;
 import com.salescontrol.domain.Sale;
@@ -523,23 +529,15 @@ public class SalesReport extends javax.swing.JFrame {
   }
 
   private void itEditProductActionPerformed(java.awt.event.ActionEvent evt) {
-    EditProduct editProduct = new EditProduct(currentUser);
-    editProduct.setVisible(true);
-    this.setVisible(false);
+    showFrame(EDIT_PRODUCT, currentUser, this);
   }
 
   private void itRegisterSaleActionPerformed(java.awt.event.ActionEvent evt) {
-    RegisterSale saleRegistration = new RegisterSale(currentUser);
-    saleRegistration.setVisible(true);
-    this.setVisible(false);
+    showFrame(REGISTER_SALE, currentUser, this);
   }
 
   private void itRegistrationProductActionPerformed(java.awt.event.ActionEvent evt) {
-    java.awt.EventQueue.invokeLater(
-        () -> {
-          new RegisterProduct(currentUser).setVisible(true);
-        });
-    this.setVisible(false);
+    showFrame(REGISTER_PRODUCT, currentUser, this);
   }
 
   private void itLeaveActionPerformed(java.awt.event.ActionEvent evt) {
@@ -549,11 +547,7 @@ public class SalesReport extends javax.swing.JFrame {
     int response =
         JOptionPane.showConfirmDialog(this, "Deseja sair?", "Logout", JOptionPane.YES_NO_OPTION);
     if (response == JOptionPane.YES_OPTION) {
-      java.awt.EventQueue.invokeLater(
-          () -> {
-            new Login().setVisible(true);
-          });
-      this.setVisible(false);
+      showLogin(this);
     }
   }
 

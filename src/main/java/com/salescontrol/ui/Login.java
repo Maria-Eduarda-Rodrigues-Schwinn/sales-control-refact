@@ -1,4 +1,7 @@
-package com.salescontrol;
+package com.salescontrol.ui;
+
+import static com.salescontrol.ui.manager.ScreenManager.showFrame;
+import static com.salescontrol.ui.manager.ScreenType.MAIN_MENU;
 
 import com.salescontrol.domain.User;
 import com.salescontrol.exception.InvalidCredentialsException;
@@ -253,8 +256,7 @@ public class Login extends javax.swing.JFrame {
               + ", sua permissão é de "
               + user.getUserType().getTranslation()
               + ". Seja bem-vindo!");
-      MainMenu mainMenu = new MainMenu(user);
-      mainMenu.setVisible(true);
+      showFrame(MAIN_MENU, user, this);
     } catch (InvalidCredentialsException e) {
       JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }

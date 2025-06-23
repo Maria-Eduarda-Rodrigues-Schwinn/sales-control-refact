@@ -1,4 +1,10 @@
-package com.salescontrol;
+package com.salescontrol.ui;
+
+import static com.salescontrol.ui.manager.ScreenManager.showFrame;
+import static com.salescontrol.ui.manager.ScreenManager.showLogin;
+import static com.salescontrol.ui.manager.ScreenType.EDIT_PRODUCT;
+import static com.salescontrol.ui.manager.ScreenType.REGISTER_SALE;
+import static com.salescontrol.ui.manager.ScreenType.SALES_REPORT;
 
 import com.salescontrol.domain.User;
 import com.salescontrol.enuns.Category;
@@ -360,23 +366,15 @@ public class RegisterProduct extends javax.swing.JFrame {
   } // </editor-fold>//GEN-END:initComponents
 
   private void itRegisterSaleActionPerformed(java.awt.event.ActionEvent evt) {
-    RegisterSale registerSale = new RegisterSale(currentUser);
-    registerSale.setVisible(true);
-    this.setVisible(false);
+    showFrame(REGISTER_SALE, currentUser, this);
   }
 
   private void itEditProductActionPerformed(java.awt.event.ActionEvent evt) {
-    EditProduct editProduct = new EditProduct(currentUser);
-    editProduct.setVisible(true);
-    this.setVisible(false);
+    showFrame(EDIT_PRODUCT, currentUser, this);
   }
 
   private void itSalesReportActionPerformed(java.awt.event.ActionEvent evt) {
-    java.awt.EventQueue.invokeLater(
-        () -> {
-          new SalesReport(currentUser).setVisible(true);
-        });
-    this.setVisible(false);
+    showFrame(SALES_REPORT, currentUser, this);
   }
 
   private void itLeaveActionPerformed(java.awt.event.ActionEvent evt) {
@@ -386,11 +384,7 @@ public class RegisterProduct extends javax.swing.JFrame {
     int response =
         JOptionPane.showConfirmDialog(this, "Deseja sair?", "Logout", JOptionPane.YES_NO_OPTION);
     if (response == JOptionPane.YES_OPTION) {
-      java.awt.EventQueue.invokeLater(
-          () -> {
-            new Login().setVisible(true);
-          });
-      this.setVisible(false);
+      showLogin(this);
     }
   }
 

@@ -1,4 +1,11 @@
-package com.salescontrol;
+package com.salescontrol.ui;
+
+import static com.salescontrol.ui.manager.ScreenManager.showFrame;
+import static com.salescontrol.ui.manager.ScreenManager.showLogin;
+import static com.salescontrol.ui.manager.ScreenType.EDIT_PRODUCT;
+import static com.salescontrol.ui.manager.ScreenType.REGISTER_PRODUCT;
+import static com.salescontrol.ui.manager.ScreenType.REGISTER_SALE;
+import static com.salescontrol.ui.manager.ScreenType.SALES_REPORT;
 
 import com.salescontrol.domain.User;
 import com.salescontrol.enuns.UserType;
@@ -198,39 +205,23 @@ public class MainMenu extends javax.swing.JFrame {
   } // </editor-fold>//GEN-END:initComponents
 
   private void btnRegisterSaleActionPerformed(java.awt.event.ActionEvent evt) {
-    RegisterSale saleRegistrationScreen = new RegisterSale(currentUser);
-    saleRegistrationScreen.setVisible(true);
-    this.setVisible(false);
+    showFrame(REGISTER_SALE, currentUser, this);
   }
 
   private void btnRegisterProductActionPerformed(java.awt.event.ActionEvent evt) {
-    java.awt.EventQueue.invokeLater(
-        () -> {
-          new RegisterProduct(currentUser).setVisible(true);
-        });
-    this.setVisible(false);
+    showFrame(REGISTER_PRODUCT, currentUser, this);
   }
 
   private void btnEditProductActionPerformed(java.awt.event.ActionEvent evt) {
-    EditProduct editProductScreen = new EditProduct(currentUser);
-    editProductScreen.setVisible(true);
-    this.setVisible(false);
+    showFrame(EDIT_PRODUCT, currentUser, this);
   }
 
   private void btnSalesReportActionPerformed(java.awt.event.ActionEvent evt) {
-    java.awt.EventQueue.invokeLater(
-        () -> {
-          new SalesReport(currentUser).setVisible(true);
-        });
-    this.setVisible(false);
+    showFrame(SALES_REPORT, currentUser, this);
   }
 
   private void btnLeaveActionPerformed(java.awt.event.ActionEvent evt) {
-    java.awt.EventQueue.invokeLater(
-        () -> {
-          new Login().setVisible(true);
-        });
-    this.setVisible(false);
+    showLogin(this);
   }
 
   public static void main(String args[]) {
