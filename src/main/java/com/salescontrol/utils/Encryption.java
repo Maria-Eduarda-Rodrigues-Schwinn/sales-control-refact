@@ -3,7 +3,7 @@ package com.salescontrol.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Criptografia {
+public class Encryption {
 
   public static String getMD5(String input) {
     try {

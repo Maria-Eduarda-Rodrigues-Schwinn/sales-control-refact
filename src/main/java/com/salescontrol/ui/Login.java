@@ -6,7 +6,7 @@ import static com.salescontrol.ui.manager.ScreenType.MAIN_MENU;
 import com.salescontrol.domain.User;
 import com.salescontrol.exception.InvalidCredentialsException;
 import com.salescontrol.service.UserService;
-import com.salescontrol.utils.Criptografia;
+import com.salescontrol.utils.Encryption;
 import javax.swing.JOptionPane;
 
 public class Login extends javax.swing.JFrame {
@@ -244,7 +244,7 @@ public class Login extends javax.swing.JFrame {
 
   private void btnEnterActionPerformed(java.awt.event.ActionEvent evt) {
     String login = txtUsername.getText().trim();
-    String password = Criptografia.getMD5(new String(txtPassword.getPassword()));
+    String password = Encryption.getMD5(new String(txtPassword.getPassword()));
 
     try {
       UserService userService = new UserService();
