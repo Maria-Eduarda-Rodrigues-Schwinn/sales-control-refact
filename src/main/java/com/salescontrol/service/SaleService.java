@@ -20,9 +20,9 @@ public class SaleService {
   private final SaleDao saleDao = new SaleDao();
 
   public Product addProductToCart(int productId, String quantityStr) {
-    int quantity = validateQuantity(quantityStr);
+    var quantity = validateQuantity(quantityStr);
 
-    Product product = productDao.getProductById(productId);
+    var product = productDao.getProductById(productId);
     if (product == null) throw new SaleNotFoundException("Produto não encontrado.");
 
     if (quantity > product.getQuantity())
@@ -39,11 +39,11 @@ public class SaleService {
       throw new SaleValidationException("O carrinho está vazio.");
     }
 
-    Sale sale = new Sale();
+    var sale = new Sale();
     sale.setSaleDate(new Date());
 
-    double total = 0.0;
-    for (SaleProduct sp : saleProducts) {
+    var total = 0.0;
+    for (var sp : saleProducts) {
       total += sp.getQuantity() * sp.getUnitPrice();
     }
 
@@ -53,8 +53,8 @@ public class SaleService {
   }
 
   public List<Sale> filterSales(SaleFilterDTO filter) {
-    SaleValidations.FilterParsedData validated = SaleValidations.parseAndValidate(filter);
-    List<Sale> allSales = saleDao.getAllSales();
+    var validated = SaleValidations.parseAndValidate(filter);
+    var allSales = saleDao.getAllSales();
 
     return allSales.stream()
         .filter(

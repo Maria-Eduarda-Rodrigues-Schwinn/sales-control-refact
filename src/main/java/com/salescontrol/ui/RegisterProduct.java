@@ -126,8 +126,7 @@ public class RegisterProduct extends javax.swing.JFrame {
           }
         });
 
-    javax.swing.GroupLayout pnlRegistrationProductLayout =
-        new javax.swing.GroupLayout(pnlRegistrationProduct);
+    var pnlRegistrationProductLayout = new javax.swing.GroupLayout(pnlRegistrationProduct);
     pnlRegistrationProduct.setLayout(pnlRegistrationProductLayout);
     pnlRegistrationProductLayout.setHorizontalGroup(
         pnlRegistrationProductLayout
@@ -342,7 +341,7 @@ public class RegisterProduct extends javax.swing.JFrame {
 
     setJMenuBar(menuBar);
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+    var layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
         layout
@@ -381,7 +380,7 @@ public class RegisterProduct extends javax.swing.JFrame {
     UIManager.put("OptionPane.yesButtonText", "Sim");
     UIManager.put("OptionPane.noButtonText", "Não");
 
-    int response =
+    var response =
         JOptionPane.showConfirmDialog(this, "Deseja sair?", "Logout", JOptionPane.YES_NO_OPTION);
     if (response == JOptionPane.YES_OPTION) {
       showLogin(this);
@@ -397,13 +396,13 @@ public class RegisterProduct extends javax.swing.JFrame {
   }
 
   private void btnAddProductActionPerformed(java.awt.event.ActionEvent evt) {
-    String name = txtName.getText().trim();
-    String quantityStr = txtQuantity.getText().trim();
-    String unitPriceStr = txtUnitPrice.getText().trim();
-    String selectedCategoryDescription = (String) comboCategoryBox.getSelectedItem();
-    String selectedUnitOfMeasure = (String) comboUnitOfMeasureBox.getSelectedItem();
+    var name = txtName.getText().trim();
+    var quantityStr = txtQuantity.getText().trim();
+    var unitPriceStr = txtUnitPrice.getText().trim();
+    var selectedCategoryDescription = (String) comboCategoryBox.getSelectedItem();
+    var selectedUnitOfMeasure = (String) comboUnitOfMeasureBox.getSelectedItem();
 
-    ProductService productService = new ProductService();
+    var productService = new ProductService();
     try {
       productService.addProduct(
           name, quantityStr, unitPriceStr, selectedCategoryDescription, selectedUnitOfMeasure);
@@ -416,8 +415,7 @@ public class RegisterProduct extends javax.swing.JFrame {
 
   public static void main(String args[]) {
     try {
-      for (javax.swing.UIManager.LookAndFeelInfo info :
-          javax.swing.UIManager.getInstalledLookAndFeels()) {
+      for (var info : javax.swing.UIManager.getInstalledLookAndFeels()) {
         if ("Nimbus".equals(info.getName())) {
           javax.swing.UIManager.setLookAndFeel(info.getClassName());
           break;
@@ -462,18 +460,18 @@ public class RegisterProduct extends javax.swing.JFrame {
   // End of variables declaration//GEN-END:variables
 
   private static String[] getCategoryDescriptions() {
-    Category[] unitOfMeasure = Category.values();
-    String[] descriptions = new String[unitOfMeasure.length];
-    for (int i = 0; i < unitOfMeasure.length; i++) {
+    var unitOfMeasure = Category.values();
+    var descriptions = new String[unitOfMeasure.length];
+    for (var i = 0; i < unitOfMeasure.length; i++) {
       descriptions[i] = unitOfMeasure[i].getTranslation();
     }
     return descriptions;
   }
 
   private static String[] getUnitOfMeasureDescriptions() {
-    UnitOfMeasure[] unitOfMeasure = UnitOfMeasure.values();
-    String[] descriptions = new String[unitOfMeasure.length];
-    for (int i = 0; i < unitOfMeasure.length; i++) {
+    var unitOfMeasure = UnitOfMeasure.values();
+    var descriptions = new String[unitOfMeasure.length];
+    for (var i = 0; i < unitOfMeasure.length; i++) {
       descriptions[i] = unitOfMeasure[i].getTranslation();
     }
     return descriptions;

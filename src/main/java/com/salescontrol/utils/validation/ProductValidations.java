@@ -20,13 +20,13 @@ public class ProductValidations {
     if (name.isEmpty() || quantityStr.isEmpty() || unitPriceStr.isEmpty())
       throw new ProductValidationException("Todos os campos devem ser preenchidos.");
 
-    Category category = getCategoryFromDescription(selectedCategoryDescription);
+    var category = getCategoryFromDescription(selectedCategoryDescription);
     if (category == null) throw new ProductValidationException("Categoria inválida.");
 
-    UnitOfMeasure unitOfMeasure = getUnitOfMeasureFromDescription(selectedUnitOfMeasure);
+    var unitOfMeasure = getUnitOfMeasureFromDescription(selectedUnitOfMeasure);
     if (unitOfMeasure == null) throw new ProductValidationException("Unidade de medida inválida.");
 
-    Product product = new Product();
+    var product = new Product();
     product.setName(name);
     product.setQuantity(validateQuantity(quantityStr));
     product.setUnitPrice(validateUnitPrice(unitPriceStr));
@@ -59,7 +59,7 @@ public class ProductValidations {
   }
 
   private static boolean isValidCategory(String category) {
-    for (Category c : Category.values()) {
+    for (var c : Category.values()) {
       if (c.getTranslation().equals(category)) {
         return true;
       }
@@ -68,7 +68,7 @@ public class ProductValidations {
   }
 
   private static boolean isValidUnitOfMeasure(String unitOfMeasure) {
-    for (UnitOfMeasure uom : UnitOfMeasure.values()) {
+    for (var uom : UnitOfMeasure.values()) {
       if (uom.getTranslation().equals(unitOfMeasure)) {
         return true;
       }
@@ -77,7 +77,7 @@ public class ProductValidations {
   }
 
   private static Category getCategoryFromDescription(String description) {
-    for (Category category : Category.values()) {
+    for (var category : Category.values()) {
       if (category.getTranslation().equals(description)) {
         return category;
       }
@@ -86,7 +86,7 @@ public class ProductValidations {
   }
 
   private static UnitOfMeasure getUnitOfMeasureFromDescription(String description) {
-    for (UnitOfMeasure unitOfMeasure : UnitOfMeasure.values()) {
+    for (var unitOfMeasure : UnitOfMeasure.values()) {
       if (unitOfMeasure.getTranslation().equals(description)) {
         return unitOfMeasure;
       }
@@ -96,7 +96,7 @@ public class ProductValidations {
 
   public static double validateUnitPrice(String unitPriceStr) {
     try {
-      double unitPrice = Double.parseDouble(unitPriceStr);
+      var unitPrice = Double.parseDouble(unitPriceStr);
 
       if (unitPrice <= 0)
         throw new ValidationException("Preço unitário inválido. Deve ser um valor positivo.");
@@ -110,7 +110,7 @@ public class ProductValidations {
 
   public static int validateQuantity(String quantityStr) {
     try {
-      int quantity = Integer.parseInt(quantityStr);
+      var quantity = Integer.parseInt(quantityStr);
 
       if (quantity < 0)
         throw new ValidationException("Quantidade inválida. Deve ser um valor positivo.");

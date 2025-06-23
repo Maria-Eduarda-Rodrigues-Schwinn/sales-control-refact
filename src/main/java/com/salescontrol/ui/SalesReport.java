@@ -6,9 +6,6 @@ import static com.salescontrol.ui.manager.ScreenType.EDIT_PRODUCT;
 import static com.salescontrol.ui.manager.ScreenType.REGISTER_PRODUCT;
 import static com.salescontrol.ui.manager.ScreenType.REGISTER_SALE;
 
-import com.salescontrol.domain.Product;
-import com.salescontrol.domain.Sale;
-import com.salescontrol.domain.SaleProduct;
 import com.salescontrol.domain.User;
 import com.salescontrol.dto.SaleFilterDTO;
 import com.salescontrol.enuns.Category;
@@ -20,7 +17,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -165,7 +161,7 @@ public class SalesReport extends javax.swing.JFrame {
           }
         });
 
-    javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+    var jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
         jPanel1Layout
@@ -400,7 +396,7 @@ public class SalesReport extends javax.swing.JFrame {
 
     setJMenuBar(menuBar);
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+    var layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
         layout
@@ -428,30 +424,30 @@ public class SalesReport extends javax.swing.JFrame {
   } // </editor-fold>//GEN-END:initComponents
 
   private void btnFilterActionPerformed(java.awt.event.ActionEvent evt) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    var dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     dateFormat.setLenient(false);
 
-    String fromDateString = txtFromDate.getText().trim();
-    String toDateString = txtToDate.getText().trim();
-    String searchedProductName = txtSearchedProductName.getText().trim();
-    String selectedCategory = (String) comboSelectedFilterBox.getSelectedItem();
+    var fromDateString = txtFromDate.getText().trim();
+    var toDateString = txtToDate.getText().trim();
+    var searchedProductName = txtSearchedProductName.getText().trim();
+    var selectedCategory = (String) comboSelectedFilterBox.getSelectedItem();
 
-    SaleFilterDTO filter = new SaleFilterDTO();
+    var filter = new SaleFilterDTO();
     filter.setFromDate(fromDateString);
     filter.setToDate(toDateString);
     filter.setProductName(searchedProductName);
     filter.setCategory(selectedCategory);
 
     try {
-      SaleService saleService = new SaleService();
-      List<Sale> filteredSales = saleService.filterSales(filter);
+      var saleService = new SaleService();
+      var filteredSales = saleService.filterSales(filter);
 
-      DefaultTableModel model = (DefaultTableModel) tblOfProductsSold.getModel();
+      var model = (DefaultTableModel) tblOfProductsSold.getModel();
       model.setRowCount(0);
 
-      for (Sale sale : filteredSales) {
-        for (SaleProduct saleProduct : sale.getProductsSold()) {
-          Product product = saleProduct.getProduct();
+      for (var sale : filteredSales) {
+        for (var saleProduct : sale.getProductsSold()) {
+          var product = saleProduct.getProduct();
           if ((selectedCategory.equals("Todas")
                   || product.getCategory().getTranslation().equals(selectedCategory))
               && (searchedProductName.isEmpty()
@@ -484,7 +480,7 @@ public class SalesReport extends javax.swing.JFrame {
   }
 
   private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {
-    DefaultTableModel reportTableModel = (DefaultTableModel) tblOfProductsSold.getModel();
+    var reportTableModel = (DefaultTableModel) tblOfProductsSold.getModel();
 
     if (reportTableModel.getRowCount() == 0) {
       JOptionPane.showMessageDialog(
@@ -492,23 +488,23 @@ public class SalesReport extends javax.swing.JFrame {
       return;
     }
 
-    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss");
-    String timestamp = sdf.format(new Date());
-    String fileName = "relatorios/vendas_" + timestamp + ".csv";
+    var sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss");
+    var timestamp = sdf.format(new Date());
+    var fileName = "relatorios/vendas_" + timestamp + ".csv";
 
-    File directory = new File("relatorios");
+    var directory = new File("relatorios");
     if (!directory.exists()) {
       directory.mkdirs();
     }
 
-    try (FileWriter csvWriter = new FileWriter(fileName)) {
-      for (int i = 0; i < reportTableModel.getColumnCount(); i++) {
+    try (var csvWriter = new FileWriter(fileName)) {
+      for (var i = 0; i < reportTableModel.getColumnCount(); i++) {
         csvWriter.append(reportTableModel.getColumnName(i)).append(",");
       }
       csvWriter.append("\n");
 
-      for (int i = 0; i < reportTableModel.getRowCount(); i++) {
-        for (int j = 0; j < reportTableModel.getColumnCount(); j++) {
+      for (var i = 0; i < reportTableModel.getRowCount(); i++) {
+        for (var j = 0; j < reportTableModel.getColumnCount(); j++) {
           csvWriter.append(reportTableModel.getValueAt(i, j).toString()).append(",");
         }
         csvWriter.append("\n");
@@ -544,7 +540,7 @@ public class SalesReport extends javax.swing.JFrame {
     UIManager.put("OptionPane.yesButtonText", "Sim");
     UIManager.put("OptionPane.noButtonText", "Não");
 
-    int response =
+    var response =
         JOptionPane.showConfirmDialog(this, "Deseja sair?", "Logout", JOptionPane.YES_NO_OPTION);
     if (response == JOptionPane.YES_OPTION) {
       showLogin(this);
@@ -557,8 +553,7 @@ public class SalesReport extends javax.swing.JFrame {
 
   public static void main(String args[]) {
     try {
-      for (javax.swing.UIManager.LookAndFeelInfo info :
-          javax.swing.UIManager.getInstalledLookAndFeels()) {
+      for (var info : javax.swing.UIManager.getInstalledLookAndFeels()) {
         if ("Nimbus".equals(info.getName())) {
           javax.swing.UIManager.setLookAndFeel(info.getClassName());
           break;
@@ -603,25 +598,25 @@ public class SalesReport extends javax.swing.JFrame {
   // End of variables declaration//GEN-END:variables
 
   private static String[] getCategoryTranslations() {
-    Category[] unitOfMeasure = Category.values();
-    String[] descriptions = new String[unitOfMeasure.length + 1];
+    var unitOfMeasure = Category.values();
+    var descriptions = new String[unitOfMeasure.length + 1];
     descriptions[0] = "Todas";
-    for (int i = 0; i < unitOfMeasure.length; i++) {
+    for (var i = 0; i < unitOfMeasure.length; i++) {
       descriptions[i + 1] = unitOfMeasure[i].getTranslation();
     }
     return descriptions;
   }
 
   private void loadSalesData() {
-    DefaultTableModel model = (DefaultTableModel) tblOfProductsSold.getModel();
+    var model = (DefaultTableModel) tblOfProductsSold.getModel();
     model.setRowCount(0);
 
-    SaleService saleService = new SaleService();
-    List<Sale> allSales = saleService.getAllSales();
+    var saleService = new SaleService();
+    var allSales = saleService.getAllSales();
 
-    for (Sale sale : allSales) {
-      for (SaleProduct saleProduct : sale.getProductsSold()) {
-        Product product = saleProduct.getProduct();
+    for (var sale : allSales) {
+      for (var saleProduct : sale.getProductsSold()) {
+        var product = saleProduct.getProduct();
         model.addRow(
             new Object[] {
               sale.getId(),

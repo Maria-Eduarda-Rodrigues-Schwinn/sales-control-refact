@@ -33,7 +33,7 @@ public class ProductTableModel extends AbstractTableModel {
 
   @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
-    Product product = products.get(rowIndex);
+    var product = products.get(rowIndex);
     return switch (columnIndex) {
       case 0 -> product.getId();
       case 1 -> product.getName();

@@ -7,7 +7,6 @@ import static com.salescontrol.ui.manager.ScreenType.REGISTER_PRODUCT;
 import static com.salescontrol.ui.manager.ScreenType.SALES_REPORT;
 
 import com.salescontrol.data.product.ProductTableModel;
-import com.salescontrol.domain.Product;
 import com.salescontrol.domain.SaleProduct;
 import com.salescontrol.domain.User;
 import com.salescontrol.enuns.UserType;
@@ -198,8 +197,7 @@ public class RegisterSale extends javax.swing.JFrame {
           }
         });
 
-    javax.swing.GroupLayout pnlRegistrationSaleLayout =
-        new javax.swing.GroupLayout(pnlRegistrationSale);
+    var pnlRegistrationSaleLayout = new javax.swing.GroupLayout(pnlRegistrationSale);
     pnlRegistrationSale.setLayout(pnlRegistrationSaleLayout);
     pnlRegistrationSaleLayout.setHorizontalGroup(
         pnlRegistrationSaleLayout
@@ -497,7 +495,7 @@ public class RegisterSale extends javax.swing.JFrame {
 
     setJMenuBar(menuBar);
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+    var layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
         layout
@@ -540,7 +538,7 @@ public class RegisterSale extends javax.swing.JFrame {
     UIManager.put("OptionPane.yesButtonText", "Sim");
     UIManager.put("OptionPane.noButtonText", "Não");
 
-    int response =
+    var response =
         JOptionPane.showConfirmDialog(this, "Deseja sair?", "Logout", JOptionPane.YES_NO_OPTION);
     if (response == JOptionPane.YES_OPTION) {
       showLogin(this);
@@ -548,7 +546,7 @@ public class RegisterSale extends javax.swing.JFrame {
   }
 
   private void btnAddProductToCartActionPerformed(java.awt.event.ActionEvent evt) {
-    int[] selectedRows = tblProducts.getSelectedRows();
+    var selectedRows = tblProducts.getSelectedRows();
     if (selectedRows.length == 0) {
       JOptionPane.showMessageDialog(
           this, "Por favor, selecione um produto para adicionar ao carrinho.");
@@ -558,27 +556,27 @@ public class RegisterSale extends javax.swing.JFrame {
       return;
     }
 
-    int selectedRow = selectedRows[0];
-    Object productIdObj = tblProducts.getValueAt(selectedRow, 0);
-    int productId = Integer.parseInt(productIdObj.toString());
+    var selectedRow = selectedRows[0];
+    var productIdObj = tblProducts.getValueAt(selectedRow, 0);
+    var productId = Integer.parseInt(productIdObj.toString());
 
-    String quantityText = txtProductQuantity.getText().trim();
+    var quantityText = txtProductQuantity.getText().trim();
     txtProductQuantity.setText("");
 
-    SaleService saleService = new SaleService();
+    var saleService = new SaleService();
     try {
-      Product product = saleService.addProductToCart(productId, quantityText);
+      var product = saleService.addProductToCart(productId, quantityText);
 
-      DefaultTableModel cartModel = (DefaultTableModel) tblCart.getModel();
+      var cartModel = (DefaultTableModel) tblCart.getModel();
 
-      int quantityToAdd = Integer.parseInt(quantityText);
+      var quantityToAdd = Integer.parseInt(quantityText);
 
-      boolean found = false;
-      for (int i = 0; i < cartModel.getRowCount(); i++) {
-        int existingProductId = Integer.parseInt(cartModel.getValueAt(i, 0).toString());
+      var found = false;
+      for (var i = 0; i < cartModel.getRowCount(); i++) {
+        var existingProductId = Integer.parseInt(cartModel.getValueAt(i, 0).toString());
         if (existingProductId == productId) {
-          int currentQuantity = Integer.parseInt(cartModel.getValueAt(i, 3).toString());
-          int updatedQuantity = currentQuantity + quantityToAdd;
+          var currentQuantity = Integer.parseInt(cartModel.getValueAt(i, 3).toString());
+          var updatedQuantity = currentQuantity + quantityToAdd;
           cartModel.setValueAt(updatedQuantity, i, 3);
           found = true;
           break;
@@ -607,7 +605,7 @@ public class RegisterSale extends javax.swing.JFrame {
   }
 
   private void btnFinalizeSaleActionPerformed(java.awt.event.ActionEvent evt) {
-    DefaultTableModel cartModel = (DefaultTableModel) tblCart.getModel();
+    var cartModel = (DefaultTableModel) tblCart.getModel();
     if (cartModel.getRowCount() == 0) {
       JOptionPane.showMessageDialog(
           this, "O carrinho está vazio. Adicione produtos antes de finalizar a venda.");
@@ -615,19 +613,19 @@ public class RegisterSale extends javax.swing.JFrame {
     }
 
     List<SaleProduct> saleProducts = new ArrayList<>();
-    for (int i = 0; i < cartModel.getRowCount(); i++) {
-      int productId = Integer.parseInt(cartModel.getValueAt(i, 0).toString());
-      int quantity = Integer.parseInt(cartModel.getValueAt(i, 3).toString());
-      double unitPrice = Double.parseDouble(cartModel.getValueAt(i, 4).toString());
+    for (var i = 0; i < cartModel.getRowCount(); i++) {
+      var productId = Integer.parseInt(cartModel.getValueAt(i, 0).toString());
+      var quantity = Integer.parseInt(cartModel.getValueAt(i, 3).toString());
+      var unitPrice = Double.parseDouble(cartModel.getValueAt(i, 4).toString());
 
-      ProductService productService = new ProductService();
-      Product product = productService.getProductById(productId);
+      var productService = new ProductService();
+      var product = productService.getProductById(productId);
 
-      SaleProduct saleProduct = new SaleProduct(product, quantity, unitPrice);
+      var saleProduct = new SaleProduct(product, quantity, unitPrice);
       saleProducts.add(saleProduct);
     }
 
-    SaleService saleService = new SaleService();
+    var saleService = new SaleService();
     try {
       saleService.finalizeSale(saleProducts);
       cartModel.setRowCount(0);
@@ -641,26 +639,26 @@ public class RegisterSale extends javax.swing.JFrame {
   }
 
   private void btnClearCartActionPerformed(java.awt.event.ActionEvent evt) {
-    DefaultTableModel cartModel = (DefaultTableModel) tblCart.getModel();
-    CartService cartService = new CartService();
+    var cartModel = (DefaultTableModel) tblCart.getModel();
+    var cartService = new CartService();
     cartService.clearCart(cartModel);
     loadProductTable();
     JOptionPane.showMessageDialog(this, "Carrinho limpo!");
   }
 
   private void btnRemoveSelectedItemFromCartTableActionPerformed(java.awt.event.ActionEvent evt) {
-    int[] selectedRows = tblCart.getSelectedRows();
+    var selectedRows = tblCart.getSelectedRows();
     if (selectedRows.length == 0) {
       JOptionPane.showMessageDialog(this, "Por favor, selecione ao menos um produto para remover.");
       return;
     }
 
-    DefaultTableModel cartModel = (DefaultTableModel) tblCart.getModel();
-    CartService cartService = new CartService();
+    var cartModel = (DefaultTableModel) tblCart.getModel();
+    var cartService = new CartService();
 
     try {
       Arrays.sort(selectedRows);
-      for (int i = selectedRows.length - 1; i >= 0; i--) {
+      for (var i = selectedRows.length - 1; i >= 0; i--) {
         cartService.removeItemFromCart(cartModel, selectedRows[i]);
       }
 
@@ -672,14 +670,14 @@ public class RegisterSale extends javax.swing.JFrame {
   }
 
   private void btnCalculateTotalActionPerformed(java.awt.event.ActionEvent evt) {
-    DefaultTableModel cartModel = (DefaultTableModel) tblCart.getModel();
-    double total = 0.0;
-    for (int i = 0; i < cartModel.getRowCount(); i++) {
-      Object quantityObject = cartModel.getValueAt(i, 3);
-      int quantity = Integer.parseInt(quantityObject.toString());
+    var cartModel = (DefaultTableModel) tblCart.getModel();
+    var total = 0.0;
+    for (var i = 0; i < cartModel.getRowCount(); i++) {
+      var quantityObject = cartModel.getValueAt(i, 3);
+      var quantity = Integer.parseInt(quantityObject.toString());
 
-      Object unitPriceObject = cartModel.getValueAt(i, 4);
-      double unitPrice = Double.parseDouble(unitPriceObject.toString());
+      var unitPriceObject = cartModel.getValueAt(i, 4);
+      var unitPrice = Double.parseDouble(unitPriceObject.toString());
 
       total += quantity * unitPrice;
     }
@@ -688,8 +686,7 @@ public class RegisterSale extends javax.swing.JFrame {
 
   public static void main(String args[]) {
     try {
-      for (javax.swing.UIManager.LookAndFeelInfo info :
-          javax.swing.UIManager.getInstalledLookAndFeels()) {
+      for (var info : javax.swing.UIManager.getInstalledLookAndFeels()) {
         if ("Nimbus".equals(info.getName())) {
           javax.swing.UIManager.setLookAndFeel(info.getClassName());
           break;
@@ -735,15 +732,15 @@ public class RegisterSale extends javax.swing.JFrame {
   // End of variables declaration//GEN-END:variables
 
   public void updateProductTable() {
-    DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
+    var model = (DefaultTableModel) tblProducts.getModel();
     model.setRowCount(0);
 
-    ProductService productService = new ProductService();
-    List<Product> products = productService.getAllProducts();
+    var productService = new ProductService();
+    var products = productService.getAllProducts();
 
     productIdMap.clear();
-    int rowIndex = 0;
-    for (Product product : products) {
+    var rowIndex = 0;
+    for (var product : products) {
       Object[] row = {
         product.getId(),
         product.getName(),
@@ -761,7 +758,7 @@ public class RegisterSale extends javax.swing.JFrame {
   @Override
   public void setVisible(boolean b) {
     if (!b) {
-      CartService cartService = new CartService();
+      var cartService = new CartService();
       cartService.restoreStockFromCart();
     }
 
@@ -781,12 +778,12 @@ public class RegisterSale extends javax.swing.JFrame {
   }
 
   private void loadProductTable() {
-    ProductService productService = new ProductService();
-    List<Product> productList = productService.getAllProducts();
+    var productService = new ProductService();
+    var productList = productService.getAllProducts();
 
     SwingUtilities.invokeLater(
         () -> {
-          ProductTableModel productTableModel = new ProductTableModel(productList);
+          var productTableModel = new ProductTableModel(productList);
           tblProducts.setModel(productTableModel);
         });
   }

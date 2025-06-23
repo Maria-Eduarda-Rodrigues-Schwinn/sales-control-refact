@@ -31,7 +31,7 @@ public class SaleTableModel extends AbstractTableModel {
 
   @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
-    Sale sale = sales.get(rowIndex);
+    var sale = sales.get(rowIndex);
     return switch (columnIndex) {
       case 0 -> sale.getId();
       case 1 -> sale.getSaleDate();

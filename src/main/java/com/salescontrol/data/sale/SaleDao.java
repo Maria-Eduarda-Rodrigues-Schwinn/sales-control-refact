@@ -20,8 +20,8 @@ public class SaleDao {
   public List<Sale> getAllSales() {
     return TransactionDBUtil.executeWithoutTransaction(
         em -> {
-          List<Sale> sales = em.createQuery("FROM Sale", Sale.class).getResultList();
-          for (Sale sale : sales) {
+          var sales = em.createQuery("FROM Sale", Sale.class).getResultList();
+          for (var sale : sales) {
             Hibernate.initialize(sale.getProductsSold());
           }
           return sales;
@@ -31,8 +31,8 @@ public class SaleDao {
   public void saveSaleWithProducts(Sale sale, List<SaleProduct> saleProducts) {
     TransactionDBUtil.execute(
         em -> {
-          Sale mergedSale = em.merge(sale);
-          for (SaleProduct saleProduct : saleProducts) {
+          var mergedSale = em.merge(sale);
+          for (var saleProduct : saleProducts) {
             saleProduct.setSale(mergedSale);
             saleProduct.setProduct(em.merge(saleProduct.getProduct()));
             em.merge(saleProduct);

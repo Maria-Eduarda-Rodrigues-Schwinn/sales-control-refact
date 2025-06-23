@@ -7,10 +7,10 @@ public class Encryption {
 
   public static String getMD5(String input) {
     try {
-      MessageDigest md = MessageDigest.getInstance("MD5");
-      byte[] messageDigest = md.digest(input.getBytes());
-      StringBuilder sb = new StringBuilder();
-      for (byte b : messageDigest) {
+      var md = MessageDigest.getInstance("MD5");
+      var messageDigest = md.digest(input.getBytes());
+      var sb = new StringBuilder();
+      for (var b : messageDigest) {
         sb.append(String.format("%02x", b));
       }
       return sb.toString();

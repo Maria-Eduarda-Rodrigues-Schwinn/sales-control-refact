@@ -30,7 +30,7 @@ public class GenericDao<T> {
   public boolean deleteById(int id) {
     return TransactionDBUtil.executeWithResult(
         em -> {
-          T entity = em.find(type, id);
+          var entity = em.find(type, id);
           if (entity != null) {
             em.remove(entity);
             return true;

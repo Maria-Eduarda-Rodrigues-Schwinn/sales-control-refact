@@ -7,14 +7,12 @@ import static com.salescontrol.ui.manager.ScreenType.REGISTER_SALE;
 import static com.salescontrol.ui.manager.ScreenType.SALES_REPORT;
 
 import com.salescontrol.data.product.ProductTableModel;
-import com.salescontrol.domain.Product;
 import com.salescontrol.domain.User;
 import com.salescontrol.enuns.UserType;
 import com.salescontrol.exception.ProductOperationException;
 import com.salescontrol.exception.ProductValidationException;
 import com.salescontrol.exception.ValidationException;
 import com.salescontrol.service.ProductService;
-import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -118,7 +116,7 @@ public class EditProduct extends javax.swing.JFrame {
           }
         });
 
-    javax.swing.GroupLayout pnlEditProductLayout = new javax.swing.GroupLayout(pnlEditProduct);
+    var pnlEditProductLayout = new javax.swing.GroupLayout(pnlEditProduct);
     pnlEditProduct.setLayout(pnlEditProductLayout);
     pnlEditProductLayout.setHorizontalGroup(
         pnlEditProductLayout
@@ -276,7 +274,7 @@ public class EditProduct extends javax.swing.JFrame {
 
     setJMenuBar(menuBar);
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+    var layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
         layout
@@ -315,7 +313,7 @@ public class EditProduct extends javax.swing.JFrame {
     UIManager.put("OptionPane.yesButtonText", "Sim");
     UIManager.put("OptionPane.noButtonText", "Não");
 
-    int response =
+    var response =
         JOptionPane.showConfirmDialog(this, "Deseja sair?", "Logout", JOptionPane.YES_NO_OPTION);
     if (response == JOptionPane.YES_OPTION) {
       java.awt.EventQueue.invokeLater(
@@ -326,7 +324,7 @@ public class EditProduct extends javax.swing.JFrame {
   }
 
   private void btnEditSelectedProductActionPerformed(java.awt.event.ActionEvent evt) {
-    int[] selectedRows = tblProducts.getSelectedRows();
+    var selectedRows = tblProducts.getSelectedRows();
     if (selectedRows.length == 0) {
       JOptionPane.showMessageDialog(
           this, "Nenhum produto foi selecionado. Por favor, escolha um da lista para editar.");
@@ -336,18 +334,18 @@ public class EditProduct extends javax.swing.JFrame {
       return;
     }
 
-    int selectedRow = selectedRows[0];
-    int productId = (int) tblProducts.getValueAt(selectedRow, 0);
-    String currentUnitPrice = tblProducts.getValueAt(selectedRow, 3).toString();
-    String currentQuantity = tblProducts.getValueAt(selectedRow, 5).toString();
+    var selectedRow = selectedRows[0];
+    var productId = (int) tblProducts.getValueAt(selectedRow, 0);
+    var currentUnitPrice = tblProducts.getValueAt(selectedRow, 3).toString();
+    var currentQuantity = tblProducts.getValueAt(selectedRow, 5).toString();
 
-    String newUnitPrice =
+    var newUnitPrice =
         JOptionPane.showInputDialog(this, "Novo preço unitário do produto:", currentUnitPrice);
-    String newQuantity =
+    var newQuantity =
         JOptionPane.showInputDialog(this, "Nova quantidade do produto:", currentQuantity);
 
     if (newUnitPrice != null && newQuantity != null) {
-      ProductService productService = new ProductService();
+      var productService = new ProductService();
       try {
         productService.updateProduct(productId, newUnitPrice, newQuantity);
 
@@ -363,7 +361,7 @@ public class EditProduct extends javax.swing.JFrame {
   }
 
   private void btnDropSelectedProductActionPerformed(java.awt.event.ActionEvent evt) {
-    int[] selectedRows = tblProducts.getSelectedRows();
+    var selectedRows = tblProducts.getSelectedRows();
     if (selectedRows.length == 0) {
       JOptionPane.showMessageDialog(this, "Por favor, selecione um produto para excluir.");
       return;
@@ -372,14 +370,14 @@ public class EditProduct extends javax.swing.JFrame {
       return;
     }
 
-    int selectedRow = selectedRows[0];
+    var selectedRow = selectedRows[0];
 
-    int productId = (int) tblProducts.getValueAt(selectedRow, 0);
+    var productId = (int) tblProducts.getValueAt(selectedRow, 0);
 
     UIManager.put("OptionPane.yesButtonText", "Sim");
     UIManager.put("OptionPane.noButtonText", "Não");
 
-    int confirm =
+    var confirm =
         JOptionPane.showConfirmDialog(
             this,
             "Tem certeza de que deseja excluir o produto?",
@@ -387,7 +385,7 @@ public class EditProduct extends javax.swing.JFrame {
             JOptionPane.YES_NO_OPTION);
 
     if (confirm == JOptionPane.YES_OPTION) {
-      ProductService productService = new ProductService();
+      var productService = new ProductService();
       try {
         productService.deleteProduct(productId);
         loadProductTable();
@@ -399,12 +397,12 @@ public class EditProduct extends javax.swing.JFrame {
   }
 
   private void btnSearchByProductNameActionPerformed(java.awt.event.ActionEvent evt) {
-    String searchName = JOptionPane.showInputDialog(this, "Digite o nome do produto para buscar:");
+    var searchName = JOptionPane.showInputDialog(this, "Digite o nome do produto para buscar:");
 
-    ProductService productService = new ProductService();
+    var productService = new ProductService();
 
     try {
-      List<Product> productList = productService.searchProductsByName(searchName);
+      var productList = productService.searchProductsByName(searchName);
       tblProducts.setModel(new ProductTableModel(productList));
     } catch (ProductValidationException ex) {
       JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
@@ -417,8 +415,7 @@ public class EditProduct extends javax.swing.JFrame {
 
   public static void main(String args[]) {
     try {
-      for (javax.swing.UIManager.LookAndFeelInfo info :
-          javax.swing.UIManager.getInstalledLookAndFeels()) {
+      for (var info : javax.swing.UIManager.getInstalledLookAndFeels()) {
         if ("Nimbus".equals(info.getName())) {
           javax.swing.UIManager.setLookAndFeel(info.getClassName());
           break;
@@ -457,13 +454,13 @@ public class EditProduct extends javax.swing.JFrame {
   // End of variables declaration//GEN-END:variables
 
   public void updateProductTable() {
-    DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
+    var model = (DefaultTableModel) tblProducts.getModel();
     model.setRowCount(0);
 
-    ProductService productService = new ProductService();
-    List<Product> products = productService.getAllProducts();
+    var productService = new ProductService();
+    var products = productService.getAllProducts();
 
-    for (Product product : products) {
+    for (var product : products) {
       Object[] row = {
         product.getId(),
         product.getName(),
@@ -490,12 +487,12 @@ public class EditProduct extends javax.swing.JFrame {
   }
 
   private void loadProductTable() {
-    ProductService productService = new ProductService();
-    List<Product> productList = productService.getAllProducts();
+    var productService = new ProductService();
+    var productList = productService.getAllProducts();
 
     SwingUtilities.invokeLater(
         () -> {
-          ProductTableModel productTableModel = new ProductTableModel(productList);
+          var productTableModel = new ProductTableModel(productList);
           tblProducts.setModel(productTableModel);
         });
   }

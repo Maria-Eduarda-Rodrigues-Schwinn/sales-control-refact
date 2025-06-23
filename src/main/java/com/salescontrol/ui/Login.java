@@ -3,7 +3,6 @@ package com.salescontrol.ui;
 import static com.salescontrol.ui.manager.ScreenManager.showFrame;
 import static com.salescontrol.ui.manager.ScreenType.MAIN_MENU;
 
-import com.salescontrol.domain.User;
 import com.salescontrol.exception.InvalidCredentialsException;
 import com.salescontrol.service.UserService;
 import com.salescontrol.utils.Encryption;
@@ -67,7 +66,7 @@ public class Login extends javax.swing.JFrame {
     lblLogo.setIcon(
         new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
 
-    javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
+    var pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
     pnlContent.setLayout(pnlContentLayout);
     pnlContentLayout.setHorizontalGroup(
         pnlContentLayout
@@ -159,7 +158,7 @@ public class Login extends javax.swing.JFrame {
           }
         });
 
-    javax.swing.GroupLayout pnlLoginLayout = new javax.swing.GroupLayout(pnlLogin);
+    var pnlLoginLayout = new javax.swing.GroupLayout(pnlLogin);
     pnlLogin.setLayout(pnlLoginLayout);
     pnlLoginLayout.setHorizontalGroup(
         pnlLoginLayout
@@ -219,7 +218,7 @@ public class Login extends javax.swing.JFrame {
                         javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(326, 326, 326)));
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+    var layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
         layout
@@ -243,12 +242,12 @@ public class Login extends javax.swing.JFrame {
   } // </editor-fold>//GEN-END:initComponents
 
   private void btnEnterActionPerformed(java.awt.event.ActionEvent evt) {
-    String login = txtUsername.getText().trim();
-    String password = Encryption.getMD5(new String(txtPassword.getPassword()));
+    var login = txtUsername.getText().trim();
+    var password = Encryption.getMD5(new String(txtPassword.getPassword()));
 
     try {
-      UserService userService = new UserService();
-      User user = userService.authenticate(login, password);
+      var userService = new UserService();
+      var user = userService.authenticate(login, password);
       JOptionPane.showMessageDialog(
           this,
           "Olá "
@@ -268,8 +267,7 @@ public class Login extends javax.swing.JFrame {
 
   public static void main(String args[]) {
     try {
-      for (javax.swing.UIManager.LookAndFeelInfo info :
-          javax.swing.UIManager.getInstalledLookAndFeels()) {
+      for (var info : javax.swing.UIManager.getInstalledLookAndFeels()) {
         if ("Nimbus".equals(info.getName())) {
           javax.swing.UIManager.setLookAndFeel(info.getClassName());
           break;

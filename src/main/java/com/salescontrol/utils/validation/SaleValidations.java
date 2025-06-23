@@ -9,7 +9,7 @@ import java.util.Date;
 public class SaleValidations {
 
   public static FilterParsedData parseAndValidate(SaleFilterDTO saleFilter) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    var dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     dateFormat.setLenient(false);
 
     Date fromDate = null;

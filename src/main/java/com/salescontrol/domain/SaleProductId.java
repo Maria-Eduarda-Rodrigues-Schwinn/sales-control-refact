@@ -31,7 +31,7 @@ public class SaleProductId implements Serializable {
 
   @Override
   public int hashCode() {
-    int hash = 3;
+    var hash = 3;
     return hash;
   }
 
@@ -46,7 +46,7 @@ public class SaleProductId implements Serializable {
     if (getClass() != obj.getClass()) {
       return false;
     }
-    final SaleProductId other = (SaleProductId) obj;
+    final var other = (SaleProductId) obj;
     if (this.saleId != other.saleId) {
       return false;
     }

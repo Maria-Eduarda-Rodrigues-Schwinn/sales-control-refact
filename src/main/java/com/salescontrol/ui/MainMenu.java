@@ -103,7 +103,7 @@ public class MainMenu extends javax.swing.JFrame {
           }
         });
 
-    javax.swing.GroupLayout pnlMainMenuLayout = new javax.swing.GroupLayout(pnlMainMenu);
+    var pnlMainMenuLayout = new javax.swing.GroupLayout(pnlMainMenu);
     pnlMainMenu.setLayout(pnlMainMenuLayout);
     pnlMainMenuLayout.setHorizontalGroup(
         pnlMainMenuLayout
@@ -177,7 +177,7 @@ public class MainMenu extends javax.swing.JFrame {
                         javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(76, Short.MAX_VALUE)));
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+    var layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
         layout
@@ -226,8 +226,7 @@ public class MainMenu extends javax.swing.JFrame {
 
   public static void main(String args[]) {
     try {
-      for (javax.swing.UIManager.LookAndFeelInfo info :
-          javax.swing.UIManager.getInstalledLookAndFeels()) {
+      for (var info : javax.swing.UIManager.getInstalledLookAndFeels()) {
         if ("Nimbus".equals(info.getName())) {
           javax.swing.UIManager.setLookAndFeel(info.getClassName());
           break;

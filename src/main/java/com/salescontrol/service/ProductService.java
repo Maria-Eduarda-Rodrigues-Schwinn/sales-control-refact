@@ -21,7 +21,7 @@ public class ProductService {
       String selectedCategoryDescription,
       String selectedUnitOfMeasure) {
 
-    Product product =
+    var product =
         ProductValidations.parseAndValidate(
             name, quantityStr, unitPriceStr, selectedCategoryDescription, selectedUnitOfMeasure);
 
@@ -29,11 +29,11 @@ public class ProductService {
   }
 
   public void updateProduct(int productId, String newUnitPriceStr, String newQuantityStr) {
-    Product product = productDao.getProductById(productId);
+    var product = productDao.getProductById(productId);
     if (product == null) throw new ProductNotFoundException("Produto não encontrado.");
 
-    double unitPrice = validateUnitPrice(newUnitPriceStr);
-    int quantity = validateQuantity(newQuantityStr);
+    var unitPrice = validateUnitPrice(newUnitPriceStr);
+    var quantity = validateQuantity(newQuantityStr);
 
     product.setUnitPrice(unitPrice);
     product.setQuantity(quantity);
@@ -49,7 +49,7 @@ public class ProductService {
   }
 
   public void deleteProduct(int productId) {
-    boolean deleted = productDao.delete(productId);
+    var deleted = productDao.delete(productId);
     if (!deleted) throw new ProductOperationException("Erro ao excluir o produto.");
   }
 
